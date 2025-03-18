@@ -11,7 +11,7 @@ function App() {
     <Router>
       <AppContainer>
         <Navbar>
-          <Logo>MarketBoost</Logo>
+          <Logo>Consumer Digital Twin</Logo>
           <NavItems>
             <NavItem>Inicio</NavItem>
             <NavItem>Características</NavItem>
@@ -81,7 +81,7 @@ function App() {
           <CTAContent>
             <CTATitle>¿Listo para impulsar tus resultados?</CTATitle>
             <CTADescription>
-              Únete a más de 10,000 empresas que ya están creciendo con MarketBoost.
+              Únete a más de 10,000 empresas que ya están creciendo con Consumer Digital Twin.
             </CTADescription>
             <CTAButton>Iniciar Prueba Gratuita</CTAButton>
           </CTAContent>
@@ -107,7 +107,7 @@ function App() {
 
         <Footer>
           <FooterContent>
-            <FooterLogo>MarketBoost</FooterLogo>
+            <FooterLogo>Consumer Digital Twin</FooterLogo>
             <FooterLinks>
               <FooterLink>Sobre Nosotros</FooterLink>
               <FooterLink>Características</FooterLink>
@@ -120,7 +120,7 @@ function App() {
               </ContactItem>
             </ContactInfo>
           </FooterContent>
-          <Copyright>© 2023 MarketBoost. Todos los derechos reservados.</Copyright>
+          <Copyright>© 2024 Consumer Digital Twin. Todos los derechos reservados.</Copyright>
         </Footer>
       </AppContainer>
     </Router>

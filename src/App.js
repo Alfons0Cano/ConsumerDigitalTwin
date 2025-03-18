@@ -6,12 +6,25 @@ import { FaRocket, FaChartLine, FaUsers, FaEnvelope } from 'react-icons/fa';
 import './App.css';
 import PricingSection from './components/PricingSection';
 
+// Paleta de colores corporativos
+const theme = {
+  primary: '#2E4756',    // Azul oscuro del logo
+  secondary: '#77AABD',  // Azul claro del logo
+  accent: '#4A7A8C',     // Tono medio para elementos destacados
+  text: '#2D3748',       // Texto principal
+  textLight: '#4A5568',  // Texto secundario
+  background: '#F7FAFC', // Fondo claro
+  white: '#FFFFFF'       // Blanco
+};
+
 function App() {
   return (
     <Router>
       <AppContainer>
         <Navbar>
-          <Logo>Consumer Digital Twin</Logo>
+          <LogoContainer>
+            <LogoImage src="/LogoWithText.png" alt="CONSUMER DIGITAL TWIN AI" />
+          </LogoContainer>
           <NavItems>
             <NavItem>Inicio</NavItem>
             <NavItem>Características</NavItem>
@@ -28,9 +41,9 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <HeroTitle>Potencia tu Estrategia de Marketing</HeroTitle>
+              <HeroTitle>Simula el Comportamiento del Consumidor con IA</HeroTitle>
               <HeroSubtitle>
-                Alcanza a tu audiencia ideal, convierte visitantes en clientes y maximiza tu ROI con nuestra plataforma integral de marketing.
+                Predice, analiza y optimiza las decisiones de tus consumidores utilizando tecnología de gemelos digitales e inteligencia artificial.
               </HeroSubtitle>
               <HeroButtons>
                 <PrimaryButton>Comenzar Ahora</PrimaryButton>
@@ -38,7 +51,15 @@ function App() {
               </HeroButtons>
             </motion.div>
           </HeroContent>
-          <HeroImage src="https://via.placeholder.com/600x400" alt="Marketing Dashboard" />
+          <HeroImageContainer>
+            <motion.img 
+              src="/Logo.png"
+              alt="CONSUMER DIGITAL TWIN AI"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+            />
+          </HeroImageContainer>
         </HeroSection>
 
         <FeaturesSection>
@@ -79,9 +100,9 @@ function App() {
 
         <CTASection>
           <CTAContent>
-            <CTATitle>¿Listo para impulsar tus resultados?</CTATitle>
+            <CTATitle>¿Listo para revolucionar tu estrategia de negocio?</CTATitle>
             <CTADescription>
-              Únete a más de 10,000 empresas que ya están creciendo con Consumer Digital Twin.
+              Únete a las empresas que ya están utilizando CONSUMER DIGITAL TWIN AI para entender y predecir el comportamiento de sus consumidores.
             </CTADescription>
             <CTAButton>Iniciar Prueba Gratuita</CTAButton>
           </CTAContent>
@@ -92,22 +113,25 @@ function App() {
           <TestimonialGrid>
             <TestimonialCard>
               <TestimonialText>
-                "MarketBoost transformó completamente nuestra estrategia digital. Incrementamos nuestras conversiones en un 40% en solo tres meses."
+                "CONSUMER DIGITAL TWIN AI nos ha permitido predecir con precisión las tendencias de consumo y adaptar nuestra estrategia en tiempo real."
               </TestimonialText>
-              <TestimonialAuthor>María González, CMO de TechSolutions</TestimonialAuthor>
+              <TestimonialAuthor>María González, CDO de TechSolutions</TestimonialAuthor>
             </TestimonialCard>
             <TestimonialCard>
               <TestimonialText>
-                "La facilidad de uso y los resultados que obtenemos son incomparables. La mejor inversión que hemos hecho para nuestro departamento de marketing."
+                "La simulación de comportamiento del consumidor nos ha ayudado a reducir costos y mejorar la satisfacción del cliente significativamente."
               </TestimonialText>
-              <TestimonialAuthor>Carlos Ramírez, Director de Marketing Digital</TestimonialAuthor>
+              <TestimonialAuthor>Carlos Ramírez, Director de Innovación Digital</TestimonialAuthor>
             </TestimonialCard>
           </TestimonialGrid>
         </TestimonialsSection>
 
         <Footer>
           <FooterContent>
-            <FooterLogo>Consumer Digital Twin</FooterLogo>
+            <FooterLogoContainer>
+              <FooterLogoImage src="/Logo.png" alt="CONSUMER DIGITAL TWIN AI" />
+              <FooterLogoText>CONSUMER DIGITAL TWIN AI</FooterLogoText>
+            </FooterLogoContainer>
             <FooterLinks>
               <FooterLink>Sobre Nosotros</FooterLink>
               <FooterLink>Características</FooterLink>
@@ -116,40 +140,44 @@ function App() {
             </FooterLinks>
             <ContactInfo>
               <ContactItem>
-                <FaEnvelope /> info@marketboost.com
+                <FaEnvelope /> info@consumerdigitaltwin.ai
               </ContactItem>
             </ContactInfo>
           </FooterContent>
-          <Copyright>© 2024 Consumer Digital Twin. Todos los derechos reservados.</Copyright>
+          <Copyright>© 2024 CONSUMER DIGITAL TWIN AI. Todos los derechos reservados.</Copyright>
         </Footer>
       </AppContainer>
     </Router>
   );
 }
 
-// Estilos con Styled Components
+// Estilos actualizados con la nueva paleta de colores
 const AppContainer = styled.div`
   font-family: 'Poppins', sans-serif;
   max-width: 100%;
   overflow-x: hidden;
+  background-color: ${theme.background};
 `;
 
 const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 50px;
-  background-color: white;
+  padding: 15px 50px;
+  background-color: ${theme.white};
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
 `;
 
-const Logo = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: #77baac;
+const LogoContainer = styled.div`
+  height: 40px;
+`;
+
+const LogoImage = styled.img`
+  height: 100%;
+  width: auto;
 `;
 
 const NavItems = styled.div`
@@ -161,15 +189,16 @@ const NavItem = styled.div`
   margin: 0 15px;
   cursor: pointer;
   font-weight: 500;
+  color: ${theme.text};
   
   &:hover {
-    color: #77baac;
+    color: ${theme.primary};
   }
 `;
 
 const NavButton = styled.button`
-  background-color: #77baac;
-  color: white;
+  background-color: ${theme.primary};
+  color: ${theme.white};
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -177,7 +206,7 @@ const NavButton = styled.button`
   font-weight: 600;
   
   &:hover {
-    background-color: #669a8f;
+    background-color: ${theme.accent};
   }
 `;
 
@@ -186,7 +215,7 @@ const HeroSection = styled.section`
   justify-content: space-between;
   align-items: center;
   padding: 80px 50px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, ${theme.background} 0%, ${theme.secondary}30 100%);
   
   @media (max-width: 960px) {
     flex-direction: column;
@@ -201,13 +230,13 @@ const HeroContent = styled.div`
 const HeroTitle = styled.h1`
   font-size: 48px;
   margin-bottom: 20px;
-  color: #2d3748;
+  color: ${theme.primary};
 `;
 
 const HeroSubtitle = styled.p`
   font-size: 18px;
   margin-bottom: 40px;
-  color: #4a5568;
+  color: ${theme.textLight};
   line-height: 1.6;
 `;
 
@@ -221,8 +250,8 @@ const HeroButtons = styled.div`
 `;
 
 const PrimaryButton = styled.button`
-  background-color: #77baac;
-  color: white;
+  background-color: ${theme.primary};
+  color: ${theme.white};
   border: none;
   padding: 15px 30px;
   border-radius: 5px;
@@ -231,14 +260,14 @@ const PrimaryButton = styled.button`
   font-size: 16px;
   
   &:hover {
-    background-color: #669a8f;
+    background-color: ${theme.accent};
   }
 `;
 
 const SecondaryButton = styled.button`
   background-color: transparent;
-  color: #77baac;
-  border: 2px solid #77baac;
+  color: ${theme.primary};
+  border: 2px solid ${theme.primary};
   padding: 15px 30px;
   border-radius: 5px;
   cursor: pointer;
@@ -246,31 +275,35 @@ const SecondaryButton = styled.button`
   font-size: 16px;
   
   &:hover {
-    background-color: rgba(119, 186, 172, 0.1);
+    background-color: ${theme.primary}10;
   }
 `;
 
-const HeroImage = styled.img`
-  max-width: 50%;
-  border-radius: 10px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+const HeroImageContainer = styled.div`
+  max-width: 400px;
+  width: 100%;
+  
+  img {
+    width: 100%;
+    height: auto;
+  }
   
   @media (max-width: 960px) {
-    max-width: 100%;
+    max-width: 300px;
     margin-top: 40px;
   }
 `;
 
 const FeaturesSection = styled.section`
   padding: 100px 50px;
-  background-color: #ffffff;
+  background-color: ${theme.white};
 `;
 
 const SectionTitle = styled.h2`
   font-size: 36px;
   text-align: center;
   margin-bottom: 60px;
-  color: #2d3748;
+  color: ${theme.primary};
 `;
 
 const FeatureGrid = styled.div`
@@ -308,10 +341,10 @@ const FeatureDescription = styled.p`
 `;
 
 const CTASection = styled.section`
-  background: linear-gradient(135deg, #77baac 0%, #569187 100%);
+  background: linear-gradient(135deg, ${theme.primary} 0%, ${theme.accent} 100%);
   padding: 80px 50px;
   text-align: center;
-  color: white;
+  color: ${theme.white};
 `;
 
 const CTAContent = styled.div`
@@ -346,7 +379,7 @@ const CTAButton = styled.button`
 
 const TestimonialsSection = styled.section`
   padding: 100px 50px;
-  background-color: #f8f9fa;
+  background-color: ${theme.background};
 `;
 
 const TestimonialGrid = styled.div`
@@ -356,7 +389,7 @@ const TestimonialGrid = styled.div`
 `;
 
 const TestimonialCard = styled.div`
-  background-color: white;
+  background-color: ${theme.white};
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -366,18 +399,18 @@ const TestimonialText = styled.p`
   font-size: 16px;
   line-height: 1.6;
   margin-bottom: 20px;
-  color: #4a5568;
+  color: ${theme.textLight};
 `;
 
 const TestimonialAuthor = styled.p`
   font-weight: 600;
-  color: #2d3748;
+  color: ${theme.primary};
 `;
 
 const Footer = styled.footer`
-  background-color: #2d3748;
+  background-color: ${theme.primary};
   padding: 60px 50px 20px;
-  color: white;
+  color: ${theme.white};
 `;
 
 const FooterContent = styled.div`
@@ -387,8 +420,19 @@ const FooterContent = styled.div`
   margin-bottom: 40px;
 `;
 
-const FooterLogo = styled.div`
-  font-size: 24px;
+const FooterLogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+`;
+
+const FooterLogoImage = styled.img`
+  height: 40px;
+  width: auto;
+`;
+
+const FooterLogoText = styled.div`
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -398,11 +442,11 @@ const FooterLinks = styled.div`
 `;
 
 const FooterLink = styled.a`
-  color: #cbd5e0;
+  color: ${theme.secondary};
   text-decoration: none;
   
   &:hover {
-    color: white;
+    color: ${theme.white};
   }
 `;
 
@@ -419,7 +463,7 @@ const Copyright = styled.div`
   text-align: center;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e0;
+  color: ${theme.secondary};
   font-size: 14px;
 `;
 

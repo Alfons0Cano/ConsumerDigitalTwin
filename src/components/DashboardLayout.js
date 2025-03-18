@@ -57,6 +57,7 @@ const DashboardLayout = ({ children }) => {
         <SidebarHeader>
           <LogoContainer>
             <LogoImage src="/Logo.png" alt="CONSUMER DIGITAL TWIN AI" />
+            <AppTitle>CONSUMER DIGITAL TWIN AI</AppTitle>
           </LogoContainer>
           <CloseButton onClick={() => setSidebarOpen(false)}>
             <FaTimes />
@@ -122,6 +123,7 @@ const Sidebar = styled.div`
 const SidebarHeader = styled.div`
   padding: 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -129,12 +131,24 @@ const SidebarHeader = styled.div`
 
 const LogoContainer = styled.div`
   height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 `;
 
 const LogoImage = styled.img`
   height: 100%;
   width: auto;
   filter: brightness(0) invert(1);
+`;
+
+const AppTitle = styled.h1`
+  color: ${theme.white};
+  font-size: 1rem;
+  text-align: center;
+  margin: 10px 0;
+  font-weight: 600;
 `;
 
 const CloseButton = styled.button`

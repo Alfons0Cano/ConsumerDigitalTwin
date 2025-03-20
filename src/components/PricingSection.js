@@ -10,21 +10,21 @@ const PricingSection = () => {
       
       <PlansContainer>
         <PlanCard>
-          <PlanName>Básico</PlanName>
-          <PlanPrice>€49<span>/mes</span></PlanPrice>
+          <PlanName>Essential</PlanName>
+          <PlanPrice>€990<span>/mes</span></PlanPrice>
           <PlanDescription>Perfecto para startups y pequeños negocios</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>5 campañas activas</span>
+              <FaCheck /> <span>Simulación de audiencia con hasta 20.000 registros mensuales</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Reportes básicos</span>
+              <FaCheck /> <span>Pruebas A/B virtuales con comparaciones limitadas</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>1,000 contactos</span>
+              <FaCheck /> <span>Predicción de tendencias a nivel básico</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Email marketing</span>
+              <FaCheck /> <span>Soporte vía email</span>
             </PlanFeature>
           </PlanFeatures>
           <PlanButton>Seleccionar Plan</PlanButton>
@@ -32,51 +32,55 @@ const PricingSection = () => {
         
         <PlanCard featured>
           <FeatureBadge>Más Popular</FeatureBadge>
-          <PlanName>Profesional</PlanName>
-          <PlanPrice>€99<span>/mes</span></PlanPrice>
-          <PlanDescription>Ideal para negocios en crecimiento</PlanDescription>
+          <PlanName>Advanced</PlanName>
+          <PlanPrice>€2.950<span>/mes</span></PlanPrice>
+          <PlanDescription>Ideal para empresas que buscan optimización avanzada de campañas</PlanDescription>
+          <br />
+          <PlanDescription>Incluye todo lo del Plan Essential, más:</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>15 campañas activas</span>
+              <FaCheck /> <span>Simulación de audiencia con hasta 150.000 registros mensuales</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Reportes avanzados</span>
+              <FaCheck /> <span>Predicción de tendencias y modelado de impacto de precios</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>10,000 contactos</span>
+              <FaCheck /> <span>Integración completa con redes sociales y plataformas de e-commerce</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Email + SMS marketing</span>
+              <FaCheck /> <span>Dashboard interactivo con métricas personalizables</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Automatizaciones</span>
+              <FaCheck /> <span>Soporte prioritario</span>
             </PlanFeature>
           </PlanFeatures>
           <PlanButton featured>Seleccionar Plan</PlanButton>
         </PlanCard>
         
         <PlanCard>
-          <PlanName>Empresarial</PlanName>
-          <PlanPrice>€249<span>/mes</span></PlanPrice>
-          <PlanDescription>Para empresas con necesidades avanzadas</PlanDescription>
+          <PlanName>Enterprise</PlanName>
+          <PlanPrice>€9.900<span>/mes</span></PlanPrice>
+          <PlanDescription>Para grandes corporaciones con necesidades avanzadas</PlanDescription>
+          <br />
+          <PlanDescription>Incluye todo lo del Plan Advanced, más:</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>Campañas ilimitadas</span>
+              <FaCheck /> <span>Acceso sin restricciones a simulación de audiencia</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Reportes personalizados</span>
+              <FaCheck /> <span>Modelado de impacto de precios en tiempo real</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Contactos ilimitados</span>
+              <FaCheck /> <span>Optimización de estrategias publicitarias con Machine Learning</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Todos los canales</span>
+              <FaCheck /> <span>Evaluación de riesgos de inversión</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>API & Integraciones</span>
+              <FaCheck /> <span>Análisis de sentimiento con NLP avanzado</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Atención prioritaria</span>
+              <FaCheck /> <span>Soporte 24/7 con equipo especializado</span>
             </PlanFeature>
           </PlanFeatures>
           <PlanButton>Seleccionar Plan</PlanButton>

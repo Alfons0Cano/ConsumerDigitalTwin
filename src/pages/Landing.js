@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PricingSection from '../components/PricingSection';
 import EssenceSection from '../components/EssenceSection';
 import VisualIdentitySection from '../components/VisualIdentitySection';
+import RoadmapSection from '../components/RoadmapSection';
 
 const theme = {
   primary: '#2E4756',
@@ -96,6 +97,8 @@ const Landing = () => {
       <EssenceSection />
 
       <VisualIdentitySection />
+
+      <RoadmapSection />
 
       <PricingSection />
     </LandingContainer>

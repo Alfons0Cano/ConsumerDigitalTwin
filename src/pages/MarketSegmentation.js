@@ -1,86 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaUsers, FaChartPie, FaSearch, FaDownload } from 'react-icons/fa';
+import { FaUsers, FaChartPie, FaSearch, FaDownload, FaChartLine, FaInfoCircle } from 'react-icons/fa';
+import { getMarketSegmentationData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const MarketSegmentation = () => {
   const [selectedSegment, setSelectedSegment] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [dateRange, setDateRange] = useState('30d');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const segments = [
-    {
-      id: 1,
-      name: 'Profesionales Jóvenes',
-      size: 35,
-      growth: 12,
-      metrics: {
-        engagement: 78,
-        retention: 65,
-        conversion: 4.2
-      },
-      demographics: {
-        age: '25-34',
-        income: '30k-50k',
-        education: 'Universidad'
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const results = getMarketSegmentationData(selectedSegment, dateRange);
+        setData(results);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: 2,
-      name: 'Familias Suburbanas',
-      size: 28,
-      growth: 8,
-      metrics: {
-        engagement: 82,
-        retention: 75,
-        conversion: 3.8
-      },
-      demographics: {
-        age: '35-44',
-        income: '50k-70k',
-        education: 'Universidad'
-      }
-    },
-    {
-      id: 3,
-      name: 'Ejecutivos Senior',
-      size: 18,
-      growth: 15,
-      metrics: {
-        engagement: 65,
-        retention: 85,
-        conversion: 5.5
-      },
-      demographics: {
-        age: '45-54',
-        income: '70k+',
-        education: 'Postgrado'
-      }
-    }
-  ];
+    };
 
-  const insights = [
-    {
-      id: 1,
-      title: 'Comportamiento de Compra',
-      description: 'Los profesionales jóvenes muestran preferencia por compras móviles',
-      segment: 'Profesionales Jóvenes',
-      impact: 'alto'
-    },
-    {
-      id: 2,
-      title: 'Canales Preferidos',
-      description: 'Las familias suburbanas responden mejor a email marketing',
-      segment: 'Familias Suburbanas',
-      impact: 'medio'
-    },
-    {
-      id: 3,
-      title: 'Sensibilidad al Precio',
-      description: 'Ejecutivos senior priorizan calidad sobre precio',
-      segment: 'Ejecutivos Senior',
-      impact: 'alto'
-    }
-  ];
+    fetchData();
+  }, [selectedSegment, dateRange]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredSegments = data?.segments.filter(segment =>
+    segment.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <LoadingMessage>Analizando segmentos de mercado...</LoadingMessage>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -94,6 +57,24 @@ const MarketSegmentation = () => {
         </Description>
       </Header>
 
+      <SummarySection>
+        <SummaryCard>
+          <SummaryIcon><FaChartPie /></SummaryIcon>
+          <SummaryValue>{data.summary.totalSegments}</SummaryValue>
+          <SummaryLabel>Segmentos Totales</SummaryLabel>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryIcon><FaChartLine /></SummaryIcon>
+          <SummaryValue>{data.summary.totalMarketSize}%</SummaryValue>
+          <SummaryLabel>Tamaño del Mercado</SummaryLabel>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryIcon><FaInfoCircle /></SummaryIcon>
+          <SummaryValue>{data.summary.averageGrowth}%</SummaryValue>
+          <SummaryLabel>Crecimiento Promedio</SummaryLabel>
+        </SummaryCard>
+      </SummarySection>
+
       <Controls>
         <SearchBar>
           <SearchIcon>
@@ -103,7 +84,7 @@ const MarketSegmentation = () => {
             type="text"
             placeholder="Buscar segmentos..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
           />
         </SearchBar>
 
@@ -114,7 +95,7 @@ const MarketSegmentation = () => {
             onChange={(e) => setSelectedSegment(e.target.value)}
           >
             <option value="all">Todos los Segmentos</option>
-            {segments.map(segment => (
+            {data.segments.map(segment => (
               <option key={segment.id} value={segment.id}>
                 {segment.name}
               </option>
@@ -143,7 +124,7 @@ const MarketSegmentation = () => {
           </SectionTitle>
           
           <SegmentGrid>
-            {segments.map(segment => (
+            {filteredSegments.map(segment => (
               <SegmentCard key={segment.id}>
                 <SegmentHeader>
                   <div>
@@ -196,6 +177,37 @@ const MarketSegmentation = () => {
                   </DemographicItem>
                 </DemographicsSection>
 
+                <BehaviorSection>
+                  <BehaviorTitle>Comportamiento</BehaviorTitle>
+                  <BehaviorGrid>
+                    <BehaviorItem>
+                      <BehaviorLabel>Frecuencia de Compra</BehaviorLabel>
+                      <BehaviorValue>{segment.behavior.purchaseFrequency}</BehaviorValue>
+                    </BehaviorItem>
+                    <BehaviorItem>
+                      <BehaviorLabel>Canal Preferido</BehaviorLabel>
+                      <BehaviorValue>{segment.behavior.preferredChannel}</BehaviorValue>
+                    </BehaviorItem>
+                    <BehaviorItem>
+                      <BehaviorLabel>Pedido Promedio</BehaviorLabel>
+                      <BehaviorValue>{segment.behavior.averageOrder}</BehaviorValue>
+                    </BehaviorItem>
+                    <BehaviorItem>
+                      <BehaviorLabel>Lealtad</BehaviorLabel>
+                      <BehaviorValue>{segment.behavior.loyalty}</BehaviorValue>
+                    </BehaviorItem>
+                  </BehaviorGrid>
+                </BehaviorSection>
+
+                <ChartContainer>
+                  <ChartTitle>Tendencia de Engagement</ChartTitle>
+                  <LineChart 
+                    data={segment.trends}
+                    color="#77AABD"
+                    height={200}
+                  />
+                </ChartContainer>
+
                 <ActionButton>
                   Ver Detalles Completos
                 </ActionButton>
@@ -208,7 +220,7 @@ const MarketSegmentation = () => {
           <SectionTitle>Insights Clave</SectionTitle>
           
           <InsightsList>
-            {insights.map(insight => (
+            {data.insights.map(insight => (
               <InsightCard key={insight.id}>
                 <InsightHeader>
                   <InsightTitle>{insight.title}</InsightTitle>
@@ -218,9 +230,29 @@ const MarketSegmentation = () => {
                 </InsightHeader>
                 <InsightDescription>{insight.description}</InsightDescription>
                 <InsightSegment>{insight.segment}</InsightSegment>
+                <InsightMetrics>
+                  {Object.entries(insight.metrics).map(([key, value]) => (
+                    <InsightMetric key={key}>
+                      <InsightMetricLabel>{key}:</InsightMetricLabel>
+                      <InsightMetricValue>{value}</InsightMetricValue>
+                    </InsightMetric>
+                  ))}
+                </InsightMetrics>
               </InsightCard>
             ))}
           </InsightsList>
+
+          <TrendsSection>
+            <SectionTitle>Tendencias Clave</SectionTitle>
+            <TrendsList>
+              {data.summary.keyTrends.map((trend, index) => (
+                <TrendItem key={index}>
+                  <TrendNumber>{index + 1}</TrendNumber>
+                  <TrendText>{trend}</TrendText>
+                </TrendItem>
+              ))}
+            </TrendsList>
+          </TrendsSection>
 
           <ExportSection>
             <ExportButton>
@@ -258,17 +290,21 @@ const Description = styled.p`
 `;
 
 const Controls = styled.div`
-  display: flex;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
   align-items: flex-end;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const SearchBar = styled.div`
-  flex: 1;
   position: relative;
   min-width: 300px;
+  max-width: 400px;
 `;
 
 const SearchIcon = styled.div`
@@ -281,10 +317,11 @@ const SearchIcon = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  padding: 0.5rem 1rem 0.5rem 2.5rem;
   border: 1px solid #CBD5E0;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  height: 36px;
   
   &:focus {
     outline: none;
@@ -295,20 +332,22 @@ const SearchInput = styled.input`
 const FilterGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  min-width: 200px;
 `;
 
 const Label = styled.label`
   font-weight: 500;
   color: #4A5568;
+  font-size: 0.9rem;
 `;
 
 const Select = styled.select`
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #CBD5E0;
   border-radius: 5px;
-  font-size: 1rem;
-  min-width: 200px;
+  font-size: 0.9rem;
+  height: 36px;
   
   &:focus {
     outline: none;
@@ -529,6 +568,162 @@ const ExportButton = styled.button`
     background: #2E4756;
     color: white;
   }
+`;
+
+const SummarySection = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const SummaryCard = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const SummaryIcon = styled.div`
+  font-size: 2rem;
+  color: #77AABD;
+  margin-bottom: 1rem;
+`;
+
+const SummaryValue = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2E4756;
+  margin-bottom: 0.5rem;
+`;
+
+const SummaryLabel = styled.div`
+  color: #718096;
+  font-size: 0.9rem;
+`;
+
+const BehaviorSection = styled.div`
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const BehaviorTitle = styled.h4`
+  color: #2E4756;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+`;
+
+const BehaviorGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+`;
+
+const BehaviorItem = styled.div``;
+
+const BehaviorLabel = styled.div`
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 0.25rem;
+`;
+
+const BehaviorValue = styled.div`
+  font-weight: 500;
+  color: #2E4756;
+`;
+
+const ChartContainer = styled.div`
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const ChartTitle = styled.h4`
+  color: #2E4756;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+`;
+
+const InsightMetrics = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const InsightMetric = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`;
+
+const InsightMetricLabel = styled.div`
+  font-size: 0.7rem;
+  color: #718096;
+  text-transform: capitalize;
+`;
+
+const InsightMetricValue = styled.div`
+  font-size: 0.8rem;
+  color: #2E4756;
+  font-weight: 500;
+`;
+
+const TrendsSection = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+`;
+
+const TrendsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const TrendItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const TrendNumber = styled.div`
+  width: 24px;
+  height: 24px;
+  background: #77AABD;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+`;
+
+const TrendText = styled.div`
+  flex: 1;
+  font-size: 0.9rem;
+  color: #2E4756;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
 `;
 
 export default MarketSegmentation;

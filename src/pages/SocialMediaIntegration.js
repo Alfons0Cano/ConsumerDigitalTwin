@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   FaFacebookF,
@@ -8,115 +8,55 @@ import {
   FaYoutube,
   FaChartLine,
   FaSync,
-  FaPlus
+  FaPlus,
+  FaUsers,
+  FaChartBar,
+  FaBullhorn
 } from 'react-icons/fa';
+import { getSocialMediaIntegrationData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const SocialMediaIntegration = () => {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
   const [dateRange, setDateRange] = useState('7d');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const platforms = [
-    {
-      id: 'facebook',
-      name: 'Facebook',
-      icon: FaFacebookF,
-      color: '#1877F2',
-      connected: true,
-      metrics: {
-        followers: '45.2K',
-        engagement: '3.8%',
-        reach: '128.5K',
-        growth: '+5.2%'
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const results = getSocialMediaIntegrationData(selectedPlatform, dateRange);
+        setData(results);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: 'twitter',
-      name: 'Twitter',
-      icon: FaTwitter,
-      color: '#1DA1F2',
-      connected: true,
-      metrics: {
-        followers: '28.7K',
-        engagement: '2.9%',
-        reach: '95.3K',
-        growth: '+3.7%'
-      }
-    },
-    {
-      id: 'instagram',
-      name: 'Instagram',
-      icon: FaInstagram,
-      color: '#E4405F',
-      connected: true,
-      metrics: {
-        followers: '52.1K',
-        engagement: '4.5%',
-        reach: '156.8K',
-        growth: '+6.8%'
-      }
-    },
-    {
-      id: 'linkedin',
-      name: 'LinkedIn',
-      icon: FaLinkedinIn,
-      color: '#0A66C2',
-      connected: false,
-      metrics: null
-    },
-    {
-      id: 'youtube',
-      name: 'YouTube',
-      icon: FaYoutube,
-      color: '#FF0000',
-      connected: false,
-      metrics: null
-    }
-  ];
+    };
 
-  const insights = [
-    {
-      platform: 'instagram',
-      type: 'trend',
-      title: 'Tendencia Detectada',
-      description: 'Los posts con productos sostenibles tienen un 45% más de engagement'
-    },
-    {
-      platform: 'facebook',
-      type: 'opportunity',
-      title: 'Oportunidad de Crecimiento',
-      description: 'La audiencia muestra alto interés en contenido educativo'
-    },
-    {
-      platform: 'twitter',
-      type: 'alert',
-      title: 'Alerta de Engagement',
-      description: 'Caída del 15% en interacciones durante horario nocturno'
-    }
-  ];
+    fetchData();
+  }, [selectedPlatform, dateRange]);
 
-  const campaigns = [
-    {
-      id: 1,
-      name: 'Campaña Sostenibilidad',
-      platforms: ['instagram', 'facebook'],
-      status: 'active',
-      performance: 85
-    },
-    {
-      id: 2,
-      name: 'Lanzamiento Producto',
-      platforms: ['twitter', 'facebook', 'instagram'],
-      status: 'scheduled',
-      performance: null
-    },
-    {
-      id: 3,
-      name: 'Webinar Innovación',
-      platforms: ['linkedin', 'twitter'],
-      status: 'completed',
-      performance: 92
-    }
-  ];
+  const handleConnectPlatform = (platformId) => {
+    // Simulate platform connection
+    console.log('Connecting platform:', platformId);
+  };
+
+  const handleUpdateData = (platformId) => {
+    // Simulate data update
+    console.log('Updating data for platform:', platformId);
+  };
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <LoadingMessage>Conectando con redes sociales...</LoadingMessage>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -127,10 +67,28 @@ const SocialMediaIntegration = () => {
         </Description>
       </Header>
 
+      <SummarySection>
+        <SummaryCard>
+          <SummaryIcon><FaUsers /></SummaryIcon>
+          <SummaryValue>{data.summary.totalFollowers}</SummaryValue>
+          <SummaryLabel>Seguidores Totales</SummaryLabel>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryIcon><FaChartBar /></SummaryIcon>
+          <SummaryValue>{data.summary.averageEngagement}</SummaryValue>
+          <SummaryLabel>Engagement Promedio</SummaryLabel>
+        </SummaryCard>
+        <SummaryCard>
+          <SummaryIcon><FaBullhorn /></SummaryIcon>
+          <SummaryValue>{data.summary.activeCampaigns}</SummaryValue>
+          <SummaryLabel>Campañas Activas</SummaryLabel>
+        </SummaryCard>
+      </SummarySection>
+
       <Content>
         <MainSection>
           <PlatformsGrid>
-            {platforms.map(platform => (
+            {data.platforms.map(platform => (
               <PlatformCard key={platform.id} connected={platform.connected}>
                 <PlatformHeader color={platform.color}>
                   <PlatformIcon>
@@ -140,37 +98,48 @@ const SocialMediaIntegration = () => {
                   {platform.connected ? (
                     <ConnectedBadge>Conectado</ConnectedBadge>
                   ) : (
-                    <ConnectButton>
+                    <ConnectButton onClick={() => handleConnectPlatform(platform.id)}>
                       <FaPlus /> Conectar
                     </ConnectButton>
                   )}
                 </PlatformHeader>
 
                 {platform.connected && platform.metrics && (
-                  <MetricsGrid>
-                    <MetricItem>
-                      <MetricLabel>Seguidores</MetricLabel>
-                      <MetricValue>{platform.metrics.followers}</MetricValue>
-                    </MetricItem>
-                    <MetricItem>
-                      <MetricLabel>Engagement</MetricLabel>
-                      <MetricValue>{platform.metrics.engagement}</MetricValue>
-                    </MetricItem>
-                    <MetricItem>
-                      <MetricLabel>Alcance</MetricLabel>
-                      <MetricValue>{platform.metrics.reach}</MetricValue>
-                    </MetricItem>
-                    <MetricItem>
-                      <MetricLabel>Crecimiento</MetricLabel>
-                      <MetricValue positive>
-                        {platform.metrics.growth}
-                      </MetricValue>
-                    </MetricItem>
-                  </MetricsGrid>
+                  <>
+                    <MetricsGrid>
+                      <MetricItem>
+                        <MetricLabel>Seguidores</MetricLabel>
+                        <MetricValue>{platform.metrics.followers}</MetricValue>
+                      </MetricItem>
+                      <MetricItem>
+                        <MetricLabel>Engagement</MetricLabel>
+                        <MetricValue>{platform.metrics.engagement}</MetricValue>
+                      </MetricItem>
+                      <MetricItem>
+                        <MetricLabel>Alcance</MetricLabel>
+                        <MetricValue>{platform.metrics.reach}</MetricValue>
+                      </MetricItem>
+                      <MetricItem>
+                        <MetricLabel>Crecimiento</MetricLabel>
+                        <MetricValue positive>
+                          {platform.metrics.growth}
+                        </MetricValue>
+                      </MetricItem>
+                    </MetricsGrid>
+
+                    <ChartContainer>
+                      <ChartTitle>Tendencia de Engagement</ChartTitle>
+                      <LineChart 
+                        data={platform.trends}
+                        color={platform.color}
+                        height={200}
+                      />
+                    </ChartContainer>
+                  </>
                 )}
 
                 {platform.connected && (
-                  <ActionButton>
+                  <ActionButton onClick={() => handleUpdateData(platform.id)}>
                     <FaSync /> Actualizar Datos
                   </ActionButton>
                 )}
@@ -187,7 +156,7 @@ const SocialMediaIntegration = () => {
             </SectionHeader>
 
             <CampaignsGrid>
-              {campaigns.map(campaign => (
+              {data.campaigns.map(campaign => (
                 <CampaignCard key={campaign.id}>
                   <CampaignHeader>
                     <CampaignName>{campaign.name}</CampaignName>
@@ -198,7 +167,7 @@ const SocialMediaIntegration = () => {
 
                   <PlatformIcons>
                     {campaign.platforms.map(platformId => {
-                      const platform = platforms.find(p => p.id === platformId);
+                      const platform = data.platforms.find(p => p.id === platformId);
                       return (
                         <PlatformIcon key={platformId} color={platform.color}>
                           <platform.icon />
@@ -206,6 +175,15 @@ const SocialMediaIntegration = () => {
                       );
                     })}
                   </PlatformIcons>
+
+                  <CampaignMetrics>
+                    {Object.entries(campaign.metrics).map(([key, value]) => (
+                      <CampaignMetric key={key}>
+                        <CampaignMetricLabel>{key}:</CampaignMetricLabel>
+                        <CampaignMetricValue>{value}</CampaignMetricValue>
+                      </CampaignMetric>
+                    ))}
+                  </CampaignMetrics>
 
                   {campaign.performance !== null && (
                     <PerformanceBar>
@@ -228,8 +206,8 @@ const SocialMediaIntegration = () => {
             </SectionTitle>
 
             <InsightsList>
-              {insights.map((insight, index) => {
-                const platform = platforms.find(p => p.id === insight.platform);
+              {data.insights.map((insight, index) => {
+                const platform = data.platforms.find(p => p.id === insight.platform);
                 return (
                   <InsightCard key={index} type={insight.type}>
                     <InsightHeader>
@@ -242,6 +220,14 @@ const SocialMediaIntegration = () => {
                     <InsightDescription>
                       {insight.description}
                     </InsightDescription>
+                    <InsightMetrics>
+                      {Object.entries(insight.metrics).map(([key, value]) => (
+                        <InsightMetric key={key}>
+                          <InsightMetricLabel>{key}:</InsightMetricLabel>
+                          <InsightMetricValue>{value}</InsightMetricValue>
+                        </InsightMetric>
+                      ))}
+                    </InsightMetrics>
                   </InsightCard>
                 );
               })}
@@ -553,6 +539,113 @@ const InsightDescription = styled.p`
   font-size: 0.9rem;
   color: #4A5568;
   margin: 0;
+`;
+
+const SummarySection = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const SummaryCard = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const SummaryIcon = styled.div`
+  font-size: 2rem;
+  color: #77AABD;
+  margin-bottom: 1rem;
+`;
+
+const SummaryValue = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2E4756;
+  margin-bottom: 0.5rem;
+`;
+
+const SummaryLabel = styled.div`
+  color: #718096;
+  font-size: 0.9rem;
+`;
+
+const ChartContainer = styled.div`
+  margin: 1.5rem;
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const ChartTitle = styled.h4`
+  color: #2E4756;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+`;
+
+const CampaignMetrics = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+`;
+
+const CampaignMetric = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`;
+
+const CampaignMetricLabel = styled.div`
+  font-size: 0.7rem;
+  color: #718096;
+  text-transform: capitalize;
+`;
+
+const CampaignMetricValue = styled.div`
+  font-size: 0.8rem;
+  color: #2E4756;
+  font-weight: 500;
+`;
+
+const InsightMetrics = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const InsightMetric = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+`;
+
+const InsightMetricLabel = styled.div`
+  font-size: 0.7rem;
+  color: #718096;
+  text-transform: capitalize;
+`;
+
+const InsightMetricValue = styled.div`
+  font-size: 0.8rem;
+  color: #2E4756;
+  font-weight: 500;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
 `;
 
 export default SocialMediaIntegration;

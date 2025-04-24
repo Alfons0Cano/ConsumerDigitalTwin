@@ -1,6 +1,6 @@
 // Demo data service for providing realistic test data
 import { faker } from '@faker-js/faker';
-import { FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin, FaExclamationTriangle, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
+import { FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin, FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaFacebookF, FaYoutube } from 'react-icons/fa';
 
 // Generate random metrics with realistic trends
 export const getDemoMetrics = () => ({
@@ -66,25 +66,151 @@ export const getAudienceSimulationData = (size = 1000) => ({
 });
 
 // Generate market segmentation data
-export const getMarketSegmentationData = () => ({
-  segments: [
+export const getMarketSegmentationData = (segment = 'all', dateRange = '30d') => {
+  const segments = [
     {
-      name: 'Early Adopters',
-      size: Math.floor(Math.random() * 20) + 10,
-      growth: (Math.random() * 10 + 5).toFixed(1)
+      id: 1,
+      name: 'Profesionales Jóvenes',
+      size: Math.floor(Math.random() * 20 + 25), // 25-45%
+      growth: Math.floor(Math.random() * 10 + 8), // 8-18%
+      metrics: {
+        engagement: Math.floor(Math.random() * 20 + 70), // 70-90%
+        retention: Math.floor(Math.random() * 15 + 60), // 60-75%
+        conversion: (Math.random() * 2 + 3).toFixed(1) // 3-5%
+      },
+      demographics: {
+        age: '25-34',
+        income: '30k-50k',
+        education: 'Universidad',
+        location: 'Urban',
+        occupation: 'Profesional'
+      },
+      behavior: {
+        purchaseFrequency: 'Mensual',
+        preferredChannel: 'Móvil',
+        averageOrder: '€50-100',
+        loyalty: 'Media'
+      },
+      trends: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 20 + 70) // 70-90%
+      }))
     },
     {
-      name: 'Mainstream',
-      size: Math.floor(Math.random() * 30) + 40,
-      growth: (Math.random() * 5 + 2).toFixed(1)
+      id: 2,
+      name: 'Familias Suburbanas',
+      size: Math.floor(Math.random() * 15 + 20), // 20-35%
+      growth: Math.floor(Math.random() * 8 + 5), // 5-13%
+      metrics: {
+        engagement: Math.floor(Math.random() * 15 + 75), // 75-90%
+        retention: Math.floor(Math.random() * 20 + 65), // 65-85%
+        conversion: (Math.random() * 1.5 + 3).toFixed(1) // 3-4.5%
+      },
+      demographics: {
+        age: '35-44',
+        income: '50k-70k',
+        education: 'Universidad',
+        location: 'Suburbano',
+        occupation: 'Profesional'
+      },
+      behavior: {
+        purchaseFrequency: 'Semanal',
+        preferredChannel: 'Email',
+        averageOrder: '€100-200',
+        loyalty: 'Alta'
+      },
+      trends: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 15 + 75) // 75-90%
+      }))
     },
     {
-      name: 'Late Majority',
-      size: Math.floor(Math.random() * 20) + 20,
-      growth: (Math.random() * 3 + 1).toFixed(1)
+      id: 3,
+      name: 'Ejecutivos Senior',
+      size: Math.floor(Math.random() * 10 + 15), // 15-25%
+      growth: Math.floor(Math.random() * 12 + 10), // 10-22%
+      metrics: {
+        engagement: Math.floor(Math.random() * 10 + 60), // 60-70%
+        retention: Math.floor(Math.random() * 15 + 75), // 75-90%
+        conversion: (Math.random() * 2 + 4).toFixed(1) // 4-6%
+      },
+      demographics: {
+        age: '45-54',
+        income: '70k+',
+        education: 'Postgrado',
+        location: 'Urban',
+        occupation: 'Ejecutivo'
+      },
+      behavior: {
+        purchaseFrequency: 'Trimestral',
+        preferredChannel: 'Desktop',
+        averageOrder: '€200+',
+        loyalty: 'Muy Alta'
+      },
+      trends: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 10 + 60) // 60-70%
+      }))
     }
-  ]
-});
+  ];
+
+  const insights = [
+    {
+      id: 1,
+      title: 'Comportamiento de Compra',
+      description: 'Los profesionales jóvenes muestran preferencia por compras móviles y responden bien a ofertas flash',
+      segment: 'Profesionales Jóvenes',
+      impact: 'alto',
+      metrics: {
+        mobileUsage: '85%',
+        responseRate: '32%',
+        averageTime: '2.5 min'
+      }
+    },
+    {
+      id: 2,
+      title: 'Canales Preferidos',
+      description: 'Las familias suburbanas responden mejor a email marketing y contenido educativo',
+      segment: 'Familias Suburbanas',
+      impact: 'medio',
+      metrics: {
+        emailOpenRate: '45%',
+        clickRate: '18%',
+        conversionRate: '4.2%'
+      }
+    },
+    {
+      id: 3,
+      title: 'Sensibilidad al Precio',
+      description: 'Ejecutivos senior priorizan calidad sobre precio y valoran el servicio personalizado',
+      segment: 'Ejecutivos Senior',
+      impact: 'alto',
+      metrics: {
+        averageOrder: '€350',
+        repeatPurchase: '78%',
+        satisfaction: '92%'
+      }
+    }
+  ];
+
+  const summary = {
+    totalSegments: segments.length,
+    totalMarketSize: segments.reduce((sum, seg) => sum + seg.size, 0),
+    averageGrowth: (segments.reduce((sum, seg) => sum + seg.growth, 0) / segments.length).toFixed(1),
+    topPerforming: segments.reduce((max, seg) => seg.metrics.conversion > max.metrics.conversion ? seg : max).name,
+    keyTrends: [
+      'Aumento en compras móviles',
+      'Mayor engagement en redes sociales',
+      'Preferencia por contenido personalizado'
+    ]
+  };
+
+  return {
+    segments: segment === 'all' ? segments : segments.filter(s => s.id === parseInt(segment)),
+    insights,
+    summary
+  };
+};
 
 // Generate A/B testing data
 export const getABTestingData = (config) => {
@@ -489,5 +615,169 @@ export const getInvestmentRiskData = (investmentAmount, marketSegment, timeframe
       confidence: Math.floor(Math.random() * 10 + 85), // 85-95%
       timeframe: `${months} meses`
     }
+  };
+};
+
+// Generate social media integration data
+export const getSocialMediaIntegrationData = (platform = 'all', dateRange = '7d') => {
+  const platforms = [
+    {
+      id: 'facebook',
+      name: 'Facebook',
+      icon: FaFacebookF,
+      color: '#1877F2',
+      connected: true,
+      metrics: {
+        followers: `${(Math.random() * 50 + 30).toFixed(1)}K`,
+        engagement: `${(Math.random() * 2 + 3).toFixed(1)}%`,
+        reach: `${(Math.random() * 100 + 100).toFixed(1)}K`,
+        growth: `+${(Math.random() * 3 + 4).toFixed(1)}%`
+      },
+      trends: Array(7).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 1000 + 500)
+      }))
+    },
+    {
+      id: 'twitter',
+      name: 'Twitter',
+      icon: FaTwitter,
+      color: '#1DA1F2',
+      connected: true,
+      metrics: {
+        followers: `${(Math.random() * 30 + 20).toFixed(1)}K`,
+        engagement: `${(Math.random() * 2 + 2).toFixed(1)}%`,
+        reach: `${(Math.random() * 80 + 60).toFixed(1)}K`,
+        growth: `+${(Math.random() * 2 + 3).toFixed(1)}%`
+      },
+      trends: Array(7).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 800 + 400)
+      }))
+    },
+    {
+      id: 'instagram',
+      name: 'Instagram',
+      icon: FaInstagram,
+      color: '#E4405F',
+      connected: true,
+      metrics: {
+        followers: `${(Math.random() * 60 + 40).toFixed(1)}K`,
+        engagement: `${(Math.random() * 3 + 4).toFixed(1)}%`,
+        reach: `${(Math.random() * 120 + 100).toFixed(1)}K`,
+        growth: `+${(Math.random() * 4 + 5).toFixed(1)}%`
+      },
+      trends: Array(7).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.floor(Math.random() * 1200 + 600)
+      }))
+    },
+    {
+      id: 'linkedin',
+      name: 'LinkedIn',
+      icon: FaLinkedin,
+      color: '#0A66C2',
+      connected: false,
+      metrics: null,
+      trends: null
+    },
+    {
+      id: 'youtube',
+      name: 'YouTube',
+      icon: FaYoutube,
+      color: '#FF0000',
+      connected: false,
+      metrics: null,
+      trends: null
+    }
+  ];
+
+  const insights = [
+    {
+      platform: 'instagram',
+      type: 'trend',
+      title: 'Tendencia Detectada',
+      description: 'Los posts con productos sostenibles tienen un 45% más de engagement',
+      metrics: {
+        engagement: '4.5%',
+        reach: '156.8K',
+        growth: '+6.8%'
+      }
+    },
+    {
+      platform: 'facebook',
+      type: 'opportunity',
+      title: 'Oportunidad de Crecimiento',
+      description: 'La audiencia muestra alto interés en contenido educativo',
+      metrics: {
+        engagement: '3.8%',
+        reach: '128.5K',
+        growth: '+5.2%'
+      }
+    },
+    {
+      platform: 'twitter',
+      type: 'alert',
+      title: 'Alerta de Engagement',
+      description: 'Caída del 15% en interacciones durante horario nocturno',
+      metrics: {
+        engagement: '2.9%',
+        reach: '95.3K',
+        growth: '+3.7%'
+      }
+    }
+  ];
+
+  const campaigns = [
+    {
+      id: 1,
+      name: 'Campaña Sostenibilidad',
+      platforms: ['instagram', 'facebook'],
+      status: 'active',
+      performance: Math.floor(Math.random() * 20 + 75), // 75-95%
+      metrics: {
+        reach: '45.2K',
+        engagement: '3.8%',
+        conversions: '1.2%'
+      }
+    },
+    {
+      id: 2,
+      name: 'Lanzamiento Producto',
+      platforms: ['twitter', 'facebook', 'instagram'],
+      status: 'scheduled',
+      performance: null,
+      metrics: {
+        estimatedReach: '85.3K',
+        targetEngagement: '4.2%',
+        budget: '€5,000'
+      }
+    },
+    {
+      id: 3,
+      name: 'Webinar Innovación',
+      platforms: ['linkedin', 'twitter'],
+      status: 'completed',
+      performance: Math.floor(Math.random() * 20 + 80), // 80-100%
+      metrics: {
+        reach: '32.1K',
+        engagement: '5.8%',
+        registrations: '1.5K'
+      }
+    }
+  ];
+
+  const summary = {
+    totalFollowers: platforms.reduce((sum, p) => sum + (p.metrics ? parseFloat(p.metrics.followers) : 0), 0).toFixed(1) + 'K',
+    averageEngagement: (platforms.reduce((sum, p) => sum + (p.metrics ? parseFloat(p.metrics.engagement) : 0), 0) / platforms.filter(p => p.metrics).length).toFixed(1) + '%',
+    totalReach: platforms.reduce((sum, p) => sum + (p.metrics ? parseFloat(p.metrics.reach) : 0), 0).toFixed(1) + 'K',
+    activeCampaigns: campaigns.filter(c => c.status === 'active').length
+  };
+
+  return {
+    platforms: platform === 'all' ? platforms : platforms.filter(p => p.id === platform),
+    insights,
+    campaigns,
+    summary
   };
 }; 

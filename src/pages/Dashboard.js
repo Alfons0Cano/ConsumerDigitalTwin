@@ -1,8 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaChartLine, FaUsers, FaCommentAlt, FaRocket } from 'react-icons/fa';
+import { getDemoMetrics, getTimeSeriesData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const Dashboard = () => {
+  const [metrics, setMetrics] = useState(null);
+  const [trendData, setTrendData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data fetching
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setMetrics(getDemoMetrics());
+        setTrendData(getTimeSeriesData(30));
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <DashboardContainer>
+        <LoadingMessage>Cargando datos del dashboard...</LoadingMessage>
+      </DashboardContainer>
+    );
+  }
+
   return (
     <DashboardContainer>
       <Header>
@@ -16,7 +49,7 @@ const Dashboard = () => {
             <FaUsers />
           </MetricIcon>
           <MetricInfo>
-            <MetricValue>2,543</MetricValue>
+            <MetricValue>{metrics.activeUsers.toLocaleString()}</MetricValue>
             <MetricLabel>Usuarios Activos</MetricLabel>
           </MetricInfo>
         </MetricCard>
@@ -26,7 +59,7 @@ const Dashboard = () => {
             <FaChartLine />
           </MetricIcon>
           <MetricInfo>
-            <MetricValue>85%</MetricValue>
+            <MetricValue>{metrics.conversionRate}%</MetricValue>
             <MetricLabel>Tasa de Conversión</MetricLabel>
           </MetricInfo>
         </MetricCard>
@@ -36,7 +69,7 @@ const Dashboard = () => {
             <FaCommentAlt />
           </MetricIcon>
           <MetricInfo>
-            <MetricValue>4.8/5</MetricValue>
+            <MetricValue>{metrics.satisfaction}/5</MetricValue>
             <MetricLabel>Satisfacción</MetricLabel>
           </MetricInfo>
         </MetricCard>
@@ -46,7 +79,7 @@ const Dashboard = () => {
             <FaRocket />
           </MetricIcon>
           <MetricInfo>
-            <MetricValue>12</MetricValue>
+            <MetricValue>{metrics.activeCampaigns}</MetricValue>
             <MetricLabel>Campañas Activas</MetricLabel>
           </MetricInfo>
         </MetricCard>
@@ -55,12 +88,12 @@ const Dashboard = () => {
       <ChartsSection>
         <ChartContainer>
           <ChartTitle>Tendencias de Audiencia</ChartTitle>
-          {/* Aquí irá el gráfico de tendencias */}
+          <LineChart data={trendData} />
         </ChartContainer>
 
         <ChartContainer>
           <ChartTitle>Análisis de Sentimiento</ChartTitle>
-          {/* Aquí irá el gráfico de sentimiento */}
+          <LineChart data={trendData} color="#4CAF50" />
         </ChartContainer>
       </ChartsSection>
 
@@ -194,6 +227,15 @@ const ActivityTime = styled.div`
 
 const ActivityText = styled.div`
   color: #2E4756;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
 `;
 
 export default Dashboard;

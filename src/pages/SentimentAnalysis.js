@@ -1,10 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaHeart, FaChartLine, FaComments, FaSearch } from 'react-icons/fa';
+import { FaHeart, FaComments, FaSearch } from 'react-icons/fa';
+import { getSentimentData, getTimeSeriesData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const SentimentAnalysis = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('7d');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sentimentData, setSentimentData] = useState(null);
+  const [trendData, setTrendData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setSentimentData(getSentimentData());
+        setTrendData(getTimeSeriesData(7));
+      } catch (error) {
+        console.error('Error fetching sentiment data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedPeriod]);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <LoadingMessage>Cargando análisis de sentimiento...</LoadingMessage>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -66,7 +97,7 @@ const SentimentAnalysis = () => {
               <FaHeart />
             </MetricIcon>
             <MetricContent>
-              <MetricValue>78%</MetricValue>
+              <MetricValue>{sentimentData.positive}%</MetricValue>
               <MetricLabel>Sentimiento Positivo</MetricLabel>
               <MetricTrend positive>↑ 5% vs periodo anterior</MetricTrend>
             </MetricContent>
@@ -77,7 +108,7 @@ const SentimentAnalysis = () => {
               <FaHeart />
             </MetricIcon>
             <MetricContent>
-              <MetricValue>12%</MetricValue>
+              <MetricValue>{sentimentData.negative}%</MetricValue>
               <MetricLabel>Sentimiento Negativo</MetricLabel>
               <MetricTrend negative>↑ 2% vs periodo anterior</MetricTrend>
             </MetricContent>
@@ -88,7 +119,7 @@ const SentimentAnalysis = () => {
               <FaHeart />
             </MetricIcon>
             <MetricContent>
-              <MetricValue>10%</MetricValue>
+              <MetricValue>{sentimentData.neutral}%</MetricValue>
               <MetricLabel>Sentimiento Neutral</MetricLabel>
               <MetricTrend>↓ 7% vs periodo anterior</MetricTrend>
             </MetricContent>
@@ -98,49 +129,25 @@ const SentimentAnalysis = () => {
         <AnalysisSection>
           <ChartSection>
             <SectionTitle>Evolución del Sentimiento</SectionTitle>
-            <ChartPlaceholder>
-              [Gráfico de evolución temporal]
-            </ChartPlaceholder>
+            <LineChart data={trendData} color="#4CAF50" />
           </ChartSection>
 
           <TopicsSection>
             <SectionTitle>Temas Principales</SectionTitle>
             <TopicsList>
-              <TopicItem>
-                <TopicName>Atención al Cliente</TopicName>
-                <TopicBar>
-                  <TopicProgress positive style={{ width: '75%' }} />
-                  <TopicProgress negative style={{ width: '25%' }} />
-                </TopicBar>
-                <TopicMetrics>
-                  <TopicMetric>75% positivo</TopicMetric>
-                  <TopicMetric>25% negativo</TopicMetric>
-                </TopicMetrics>
-              </TopicItem>
-
-              <TopicItem>
-                <TopicName>Calidad del Producto</TopicName>
-                <TopicBar>
-                  <TopicProgress positive style={{ width: '82%' }} />
-                  <TopicProgress negative style={{ width: '18%' }} />
-                </TopicBar>
-                <TopicMetrics>
-                  <TopicMetric>82% positivo</TopicMetric>
-                  <TopicMetric>18% negativo</TopicMetric>
-                </TopicMetrics>
-              </TopicItem>
-
-              <TopicItem>
-                <TopicName>Precio</TopicName>
-                <TopicBar>
-                  <TopicProgress positive style={{ width: '60%' }} />
-                  <TopicProgress negative style={{ width: '40%' }} />
-                </TopicBar>
-                <TopicMetrics>
-                  <TopicMetric>60% positivo</TopicMetric>
-                  <TopicMetric>40% negativo</TopicMetric>
-                </TopicMetrics>
-              </TopicItem>
+              {sentimentData.topics.map((topic, index) => (
+                <TopicItem key={index}>
+                  <TopicName>{topic.name}</TopicName>
+                  <TopicBar>
+                    <TopicProgress positive style={{ width: `${topic.positive}%` }} />
+                    <TopicProgress negative style={{ width: `${topic.negative}%` }} />
+                  </TopicBar>
+                  <TopicMetrics>
+                    <TopicMetric>{topic.positive}% positivo</TopicMetric>
+                    <TopicMetric>{topic.negative}% negativo</TopicMetric>
+                  </TopicMetrics>
+                </TopicItem>
+              ))}
             </TopicsList>
           </TopicsSection>
         </AnalysisSection>
@@ -152,41 +159,20 @@ const SentimentAnalysis = () => {
           </SectionTitle>
           
           <MentionsList>
-            <MentionCard positive>
-              <MentionHeader>
-                <MentionAuthor>@usuario123</MentionAuthor>
-                <MentionTime>Hace 2 horas</MentionTime>
-                <SentimentBadge positive>Positivo</SentimentBadge>
-              </MentionHeader>
-              <MentionContent>
-                "Excelente servicio al cliente, resolvieron mi problema rápidamente. ¡Muy satisfecho!"
-              </MentionContent>
-              <MentionSource>Twitter</MentionSource>
-            </MentionCard>
-
-            <MentionCard negative>
-              <MentionHeader>
-                <MentionAuthor>@cliente456</MentionAuthor>
-                <MentionTime>Hace 4 horas</MentionTime>
-                <SentimentBadge negative>Negativo</SentimentBadge>
-              </MentionHeader>
-              <MentionContent>
-                "Los tiempos de entrega son demasiado largos, necesitan mejorar esto."
-              </MentionContent>
-              <MentionSource>Facebook</MentionSource>
-            </MentionCard>
-
-            <MentionCard positive>
-              <MentionHeader>
-                <MentionAuthor>@usuario789</MentionAuthor>
-                <MentionTime>Hace 6 horas</MentionTime>
-                <SentimentBadge positive>Positivo</SentimentBadge>
-              </MentionHeader>
-              <MentionContent>
-                "Los nuevos productos son increíbles, especialmente la calidad de los materiales."
-              </MentionContent>
-              <MentionSource>Instagram</MentionSource>
-            </MentionCard>
+            {sentimentData.mentions.map((mention, index) => (
+              <MentionCard key={index} sentiment={mention.sentiment}>
+                <MentionHeader>
+                  <MentionAuthor>@{mention.author}</MentionAuthor>
+                  <MentionTime>{new Date(mention.time).toLocaleString()}</MentionTime>
+                  <SentimentBadge sentiment={mention.sentiment}>
+                    {mention.sentiment === 'positive' ? 'Positivo' : 
+                     mention.sentiment === 'negative' ? 'Negativo' : 'Neutral'}
+                  </SentimentBadge>
+                </MentionHeader>
+                <MentionContent>{mention.content}</MentionContent>
+                <MentionSource>{mention.source}</MentionSource>
+              </MentionCard>
+            ))}
           </MentionsList>
         </RecentMentions>
       </Content>
@@ -368,16 +354,6 @@ const SectionTitle = styled.h2`
   gap: 0.5rem;
 `;
 
-const ChartPlaceholder = styled.div`
-  background: #F7FAFC;
-  height: 300px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4A5568;
-`;
-
 const TopicsSection = styled.div`
   background: white;
   padding: 1.5rem;
@@ -476,6 +452,15 @@ const MentionContent = styled.div`
 const MentionSource = styled.div`
   color: #4A5568;
   font-size: 0.8rem;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
 `;
 
 export default SentimentAnalysis;

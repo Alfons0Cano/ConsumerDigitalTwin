@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import { FaBullseye, FaEye, FaHeart } from 'react-icons/fa';
 import { theme } from '../theme';
 

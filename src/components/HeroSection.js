@@ -21,7 +21,7 @@ const HeroSection = () => {
           </HeroSubtitle>
           <HeroButtons>
             <PrimaryButton onClick={() => navigate('/login')}>Comenzar Ahora</PrimaryButton>
-            <SecondaryButton>Ver Demo</SecondaryButton>
+            <SecondaryButton onClick={() => navigate('/audience-simulation')}>Ver Demo</SecondaryButton>
           </HeroButtons>
         </motion.div>
       </HeroContent>

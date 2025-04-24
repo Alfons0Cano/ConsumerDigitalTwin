@@ -182,4 +182,64 @@ export const getTrendPredictionData = (period = '30d', category = 'all') => {
     trends: category === 'all' ? trends : trends.filter(t => t.category === category),
     insights
   };
+};
+
+// Generate pricing impact analysis data
+export const getPricingImpactData = (currentPrice, competitorPrices, margin) => {
+  const basePrice = parseFloat(currentPrice) || 100;
+  const competitors = competitorPrices ? competitorPrices.split(',').map(p => parseFloat(p.trim())) : [90, 110, 95];
+  const avgCompetitorPrice = competitors.reduce((a, b) => a + b, 0) / competitors.length;
+  const marginPercent = parseFloat(margin) || 30;
+
+  const scenarios = [
+    {
+      id: 1,
+      scenario: 'Optimista',
+      impact: Math.floor(Math.random() * 10 + 10), // 10-20% increase
+      revenue: Math.floor(basePrice * 1000 * (1 + (Math.random() * 0.2 + 0.1))), // 10-30% revenue increase
+      confidence: Math.floor(Math.random() * 10 + 80) // 80-90% confidence
+    },
+    {
+      id: 2,
+      scenario: 'Moderado',
+      impact: Math.floor(Math.random() * 5 + 5), // 5-10% increase
+      revenue: Math.floor(basePrice * 1000 * (1 + (Math.random() * 0.1 + 0.05))), // 5-15% revenue increase
+      confidence: Math.floor(Math.random() * 10 + 85) // 85-95% confidence
+    },
+    {
+      id: 3,
+      scenario: 'Conservador',
+      impact: Math.floor(Math.random() * 3 + 1), // 1-4% increase
+      revenue: Math.floor(basePrice * 1000 * (1 + (Math.random() * 0.05 + 0.02))), // 2-7% revenue increase
+      confidence: Math.floor(Math.random() * 10 + 90) // 90-100% confidence
+    }
+  ];
+
+  const recommendations = [
+    {
+      title: 'Precio Óptimo Sugerido',
+      value: `€${(avgCompetitorPrice * 0.95).toFixed(2)}`,
+      description: 'Basado en el análisis de precios de competidores y elasticidad de demanda'
+    },
+    {
+      title: 'Incremento Gradual',
+      value: '5% por fase',
+      description: 'Implementar cambios de precio en fases para minimizar el impacto en la base de clientes'
+    },
+    {
+      title: 'Momento Óptimo',
+      value: 'Q4 2024',
+      description: 'Iniciar cambios durante temporada alta para maximizar el impacto positivo'
+    }
+  ];
+
+  return {
+    scenarios,
+    recommendations,
+    marketAnalysis: {
+      pricePosition: basePrice < avgCompetitorPrice ? 'below' : 'above',
+      priceDifference: ((basePrice - avgCompetitorPrice) / avgCompetitorPrice * 100).toFixed(1),
+      marginAnalysis: `El margen actual de ${marginPercent}% es ${marginPercent > 35 ? 'alto' : marginPercent < 25 ? 'bajo' : 'óptimo'} para el sector`
+    }
+  };
 }; 

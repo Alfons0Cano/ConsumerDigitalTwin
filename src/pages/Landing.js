@@ -5,6 +5,7 @@ import EssenceSection from '../components/landing/EssenceSection';
 import VisualIdentitySection from '../components/landing/VisualIdentitySection';
 import RoadmapSection from '../components/landing/RoadmapSection';
 import FeaturesSection from '../components/landing/FeaturesSection';
+import CompetitionSection from '../components/landing/CompetitionSection';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/landing/HeroSection';
 import { theme } from '../theme';
@@ -16,6 +17,7 @@ const Landing = () => {
       <HeroSection />
       <FeaturesSection />
       <EssenceSection />
+      <CompetitionSection />
       <VisualIdentitySection />
       <RoadmapSection />
       <PricingSection />

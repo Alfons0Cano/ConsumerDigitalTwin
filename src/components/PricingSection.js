@@ -5,23 +5,23 @@ import { FaCheck } from 'react-icons/fa';
 const PricingSection = () => {
   return (
     <PricingContainer>
-      <SectionTitle>Planes a tu Medida</SectionTitle>
-      <PricingSubtitle>Escala tu estrategia con nuestros planes flexibles</PricingSubtitle>
+      <SectionTitle>Planes de Digital Twin</SectionTitle>
+      <PricingSubtitle>Optimiza tu estrategia digital con IA avanzada</PricingSubtitle>
       
       <PlansContainer>
         <PlanCard>
           <PlanName>Essential</PlanName>
-          <PlanPrice>€990<span>/mes</span></PlanPrice>
-          <PlanDescription>Perfecto para startups y pequeños negocios</PlanDescription>
+          <PlanPrice>€490<span>/mes</span></PlanPrice>
+          <PlanDescription>Ideal para startups</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>Simulación de audiencia con hasta 20.000 registros mensuales</span>
+              <FaCheck /> <span>20.000 simulaciones/mes</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Pruebas A/B virtuales con comparaciones limitadas</span>
+              <FaCheck /> <span>Pruebas A/B limitadas</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Predicción de tendencias a nivel básico</span>
+              <FaCheck /> <span>Predicciones básicas</span>
             </PlanFeature>
             <PlanFeature>
               <FaCheck /> <span>Soporte vía email</span>
@@ -33,22 +33,20 @@ const PricingSection = () => {
         <PlanCard featured>
           <FeatureBadge>Más Popular</FeatureBadge>
           <PlanName>Advanced</PlanName>
-          <PlanPrice>€2.950<span>/mes</span></PlanPrice>
-          <PlanDescription>Ideal para empresas que buscan optimización avanzada de campañas</PlanDescription>
-          <br />
-          <PlanDescription>Incluye todo lo del Plan Essential, más:</PlanDescription>
+          <PlanPrice>€990<span>/mes</span></PlanPrice>
+          <PlanDescription>Para empresas en crecimiento</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>Simulación de audiencia con hasta 150.000 registros mensuales</span>
+              <FaCheck /> <span>150.000 simulaciones/mes</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Predicción de tendencias y modelado de impacto de precios</span>
+              <FaCheck /> <span>Predicción de tendencias</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Integración completa con redes sociales y plataformas de e-commerce</span>
+              <FaCheck /> <span>Integración con e-commerce</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Dashboard interactivo con métricas personalizables</span>
+              <FaCheck /> <span>Dashboard personalizable</span>
             </PlanFeature>
             <PlanFeature>
               <FaCheck /> <span>Soporte prioritario</span>
@@ -59,35 +57,30 @@ const PricingSection = () => {
         
         <PlanCard>
           <PlanName>Enterprise</PlanName>
-          <PlanPrice>€9.900<span>/mes</span></PlanPrice>
-          <PlanDescription>Para grandes corporaciones con necesidades avanzadas</PlanDescription>
-          <br />
-          <PlanDescription>Incluye todo lo del Plan Advanced, más:</PlanDescription>
+          <PlanPrice>€2.950<span>/mes</span></PlanPrice>
+          <PlanDescription>Para grandes corporaciones</PlanDescription>
           <PlanFeatures>
             <PlanFeature>
-              <FaCheck /> <span>Acceso sin restricciones a simulación de audiencia</span>
+              <FaCheck /> <span>Simulaciones ilimitadas</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Modelado de impacto de precios en tiempo real</span>
+              <FaCheck /> <span>Optimización de estrategias</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Optimización de estrategias publicitarias con Machine Learning</span>
+              <FaCheck /> <span>NLP avanzado</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Evaluación de riesgos de inversión</span>
+              <FaCheck /> <span>Análisis de riesgos</span>
             </PlanFeature>
             <PlanFeature>
-              <FaCheck /> <span>Análisis de sentimiento con NLP avanzado</span>
-            </PlanFeature>
-            <PlanFeature>
-              <FaCheck /> <span>Soporte 24/7 con equipo especializado</span>
+              <FaCheck /> <span>Soporte 24/7</span>
             </PlanFeature>
           </PlanFeatures>
           <PlanButton>Seleccionar Plan</PlanButton>
         </PlanCard>
       </PlansContainer>
       
-      <Disclaimer>Todos los planes incluyen prueba gratuita de 14 días. Sin compromiso.</Disclaimer>
+      <Disclaimer>14 días de prueba gratuita. Sin tarjeta de crédito.</Disclaimer>
     </PricingContainer>
   );
 };
@@ -99,19 +92,21 @@ const PricingContainer = styled.section`
   text-align: center;
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 36px;
+const SectionTitle = styled.h1`
+  font-size: 42px;
   margin-bottom: 20px;
   color: #2d3748;
+  font-weight: 700;
 `;
 
-const PricingSubtitle = styled.p`
-  font-size: 18px;
+const PricingSubtitle = styled.h2`
+  font-size: 20px;
   color: #4a5568;
   margin-bottom: 60px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  font-weight: 400;
 `;
 
 const PlansContainer = styled.div`
@@ -141,8 +136,9 @@ const FeatureBadge = styled.div`
 `;
 
 const PlanName = styled.h3`
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 15px;
+  font-weight: 600;
 `;
 
 const PlanPrice = styled.div`
@@ -156,9 +152,11 @@ const PlanPrice = styled.div`
   }
 `;
 
-const PlanDescription = styled.p`
+const PlanDescription = styled.h4`
   margin-bottom: 30px;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  color: ${props => props.featured ? 'white' : '#4a5568'};
 `;
 
 const PlanFeatures = styled.ul`

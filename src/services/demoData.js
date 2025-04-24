@@ -242,7 +242,6 @@ export const getABTestingData = (config) => {
 
 // Generate trend prediction data
 export const getTrendPredictionData = (period = '30d', category = 'all') => {
-  const categories = ['tech', 'eco', 'health', 'ecommerce'];
   const trends = [
     {
       id: 1,

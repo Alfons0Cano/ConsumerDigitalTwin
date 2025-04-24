@@ -11,7 +11,28 @@ const InvestmentRisk = () => {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!investmentAmount || !marketSegment || !timeframe) return;
+      
+      setLoading(true);
+      try {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const results = getInvestmentRiskData(investmentAmount, marketSegment, timeframe);
+        setAnalysis(results);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [investmentAmount, marketSegment, timeframe]);
+
+  const handleAnalyze = async (e) => {
+    e.preventDefault();
     setLoading(true);
     try {
       // Simulate API delay
@@ -23,17 +44,6 @@ const InvestmentRisk = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    if (investmentAmount && marketSegment && timeframe) {
-      fetchData();
-    }
-  }, [investmentAmount, marketSegment, timeframe]);
-
-  const handleAnalyze = async (e) => {
-    e.preventDefault();
-    await fetchData();
   };
 
   if (loading) {

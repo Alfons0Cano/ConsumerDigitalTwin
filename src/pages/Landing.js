@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaRocket, FaChartLine, FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import PricingSection from '../components/PricingSection';
 import EssenceSection from '../components/EssenceSection';
 import VisualIdentitySection from '../components/VisualIdentitySection';
 import RoadmapSection from '../components/RoadmapSection';
+import FeaturesSection from '../components/FeaturesSection';
 
 const theme = {
   primary: '#2E4756',
@@ -61,38 +61,7 @@ const Landing = () => {
         </HeroImageContainer>
       </HeroSection>
 
-      <FeaturesSection>
-        <SectionTitle>Características Principales</SectionTitle>
-        <FeatureGrid>
-          <FeatureCard>
-            <FeatureIcon>
-              <FaRocket size={40} />
-            </FeatureIcon>
-            <FeatureTitle>Campañas Optimizadas</FeatureTitle>
-            <FeatureDescription>
-              Lanza campañas de marketing con automatización inteligente y optimización en tiempo real.
-            </FeatureDescription>
-          </FeatureCard>
-          <FeatureCard>
-            <FeatureIcon>
-              <FaChartLine size={40} />
-            </FeatureIcon>
-            <FeatureTitle>Analítica Avanzada</FeatureTitle>
-            <FeatureDescription>
-              Monitorea el rendimiento de tus campañas con métricas detalladas y reportes personalizables.
-            </FeatureDescription>
-          </FeatureCard>
-          <FeatureCard>
-            <FeatureIcon>
-              <FaUsers size={40} />
-            </FeatureIcon>
-            <FeatureTitle>Segmentación Precisa</FeatureTitle>
-            <FeatureDescription>
-              Divide tu audiencia en segmentos específicos para mensajes más relevantes y mayor conversión.
-            </FeatureDescription>
-          </FeatureCard>
-        </FeatureGrid>
-      </FeaturesSection>
+      <FeaturesSection />
 
       <EssenceSection />
 
@@ -227,54 +196,6 @@ const HeroImageContainer = styled.div`
     max-width: 100%;
     height: auto;
   }
-`;
-
-const FeaturesSection = styled.section`
-  padding: 80px 50px;
-  background-color: ${theme.background};
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 60px;
-  color: ${theme.primary};
-`;
-
-const FeatureGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const FeatureCard = styled.div`
-  background-color: ${theme.white};
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-10px);
-  }
-`;
-
-const FeatureIcon = styled.div`
-  color: ${theme.secondary};
-  margin-bottom: 20px;
-`;
-
-const FeatureTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: ${theme.text};
-`;
-
-const FeatureDescription = styled.p`
-  color: ${theme.textLight};
-  line-height: 1.6;
 `;
 
 export default Landing;

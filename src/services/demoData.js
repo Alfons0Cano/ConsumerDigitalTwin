@@ -83,4 +83,32 @@ export const getMarketSegmentationData = () => ({
       growth: (Math.random() * 3 + 1).toFixed(1)
     }
   ]
-}); 
+});
+
+// Generate A/B testing data
+export const getABTestingData = (config) => {
+  const baseConversion = Math.random() * 2 + 2; // 2-4% base conversion
+  const testConversion = baseConversion + (Math.random() * 2 - 0.5); // Random improvement or decline
+  const users = Math.floor(config.sampleSize / 2); // Split sample size between variants
+
+  return {
+    name: config.testName,
+    progress: Math.floor(Math.random() * 30 + 40), // 40-70% progress
+    variants: {
+      control: {
+        conversion: baseConversion.toFixed(1),
+        users: users
+      },
+      test: {
+        conversion: testConversion.toFixed(1),
+        users: users,
+        winning: testConversion > baseConversion
+      }
+    },
+    confidence: Math.floor(Math.random() * 10 + 90), // 90-100% confidence
+    conversionData: Array(7).fill(null).map((_, i) => ({
+      date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      value: Math.floor(Math.random() * 100 + 50) // Random daily conversions
+    }))
+  };
+}; 

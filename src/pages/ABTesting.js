@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaFlask, FaChartPie, FaArrowRight } from 'react-icons/fa';
+import { getABTestingData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const ABTesting = () => {
   const [testConfig, setTestConfig] = useState({
@@ -10,11 +12,68 @@ const ABTesting = () => {
     duration: 7,
     targetMetric: 'conversion'
   });
+  const [activeTest, setActiveTest] = useState(null);
+  const [completedTests, setCompletedTests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleStartTest = () => {
-    // Aquí iría la lógica para iniciar el test A/B
-    console.log('Iniciando test A/B...', testConfig);
+  const handleStartTest = async () => {
+    if (!testConfig.testName) {
+      alert('Por favor, ingresa un nombre para el test');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const newTest = getABTestingData(testConfig);
+      setActiveTest(newTest);
+      setTestConfig({
+        testName: '',
+        variant: 'color',
+        sampleSize: 1000,
+        duration: 7,
+        targetMetric: 'conversion'
+      });
+    } catch (error) {
+      console.error('Error starting test:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    // Simulate fetching completed tests
+    const fetchCompletedTests = async () => {
+      try {
+        const tests = [
+          {
+            name: 'Test Imágenes Homepage',
+            metrics: {
+              conversion: '+15%',
+              duration: '7 días',
+              users: '5,000'
+            },
+            status: 'completed'
+          },
+          {
+            name: 'Test Texto Landing Page',
+            metrics: {
+              conversion: '+8%',
+              duration: '14 días',
+              users: '10,000'
+            },
+            status: 'completed'
+          }
+        ];
+        setCompletedTests(tests);
+      } catch (error) {
+        console.error('Error fetching completed tests:', error);
+      }
+    };
+
+    fetchCompletedTests();
+  }, []);
 
   return (
     <PageContainer>
@@ -91,9 +150,9 @@ const ABTesting = () => {
               </Select>
             </FormGroup>
 
-            <StartTestButton onClick={handleStartTest}>
-              <FaArrowRight />
-              Iniciar Test A/B
+            <StartTestButton onClick={handleStartTest} disabled={loading}>
+              <FaArrowRight className={loading ? 'spinning' : ''} />
+              {loading ? 'Iniciando Test...' : 'Iniciar Test A/B'}
             </StartTestButton>
           </ConfigForm>
         </TestConfigSection>
@@ -101,82 +160,87 @@ const ABTesting = () => {
         <ResultsSection>
           <SectionTitle>Resultados Activos</SectionTitle>
           
-          <ActiveTestCard>
-            <TestHeader>
-              <TestName>Test CTA Principal</TestName>
-              <TestStatus>En Progreso</TestStatus>
-            </TestHeader>
+          {loading ? (
+            <LoadingMessage>Iniciando nuevo test...</LoadingMessage>
+          ) : activeTest ? (
+            <ActiveTestCard>
+              <TestHeader>
+                <TestName>{activeTest.name}</TestName>
+                <TestStatus>En Progreso</TestStatus>
+              </TestHeader>
 
-            <TestProgress>
-              <ProgressBar progress={65} />
-              <ProgressText>65% completado</ProgressText>
-            </TestProgress>
+              <TestProgress>
+                <ProgressBar progress={activeTest.progress} />
+                <ProgressText>{activeTest.progress}% completado</ProgressText>
+              </TestProgress>
 
-            <TestVariants>
-              <Variant>
-                <VariantLabel>Variante A (Control)</VariantLabel>
-                <VariantMetrics>
-                  <Metric>
-                    <MetricLabel>Conversiones</MetricLabel>
-                    <MetricValue>3.2%</MetricValue>
-                  </Metric>
-                  <Metric>
-                    <MetricLabel>Usuarios</MetricLabel>
-                    <MetricValue>2,345</MetricValue>
-                  </Metric>
-                </VariantMetrics>
-              </Variant>
+              <TestVariants>
+                <Variant>
+                  <VariantLabel>Variante A (Control)</VariantLabel>
+                  <VariantMetrics>
+                    <Metric>
+                      <MetricLabel>Conversiones</MetricLabel>
+                      <MetricValue>{activeTest.variants.control.conversion}%</MetricValue>
+                    </Metric>
+                    <Metric>
+                      <MetricLabel>Usuarios</MetricLabel>
+                      <MetricValue>{activeTest.variants.control.users.toLocaleString()}</MetricValue>
+                    </Metric>
+                  </VariantMetrics>
+                </Variant>
 
-              <Variant winning>
-                <VariantLabel>Variante B</VariantLabel>
-                <VariantMetrics>
-                  <Metric>
-                    <MetricLabel>Conversiones</MetricLabel>
-                    <MetricValue>4.1%</MetricValue>
-                  </Metric>
-                  <Metric>
-                    <MetricLabel>Usuarios</MetricLabel>
-                    <MetricValue>2,341</MetricValue>
-                  </Metric>
-                </VariantMetrics>
-                <WinningBadge>Líder</WinningBadge>
-              </Variant>
-            </TestVariants>
+                <Variant winning={activeTest.variants.test.winning}>
+                  <VariantLabel>Variante B</VariantLabel>
+                  <VariantMetrics>
+                    <Metric>
+                      <MetricLabel>Conversiones</MetricLabel>
+                      <MetricValue>{activeTest.variants.test.conversion}%</MetricValue>
+                    </Metric>
+                    <Metric>
+                      <MetricLabel>Usuarios</MetricLabel>
+                      <MetricValue>{activeTest.variants.test.users.toLocaleString()}</MetricValue>
+                    </Metric>
+                  </VariantMetrics>
+                  {activeTest.variants.test.winning && <WinningBadge>Líder</WinningBadge>}
+                </Variant>
+              </TestVariants>
 
-            <SignificanceInfo>
-              <FaChartPie />
-              Confianza estadística: 95%
-            </SignificanceInfo>
-          </ActiveTestCard>
+              <ChartContainer>
+                <ChartTitle>Evolución de Conversiones</ChartTitle>
+                <LineChart data={activeTest.conversionData} color="#77AABD" />
+              </ChartContainer>
+
+              <SignificanceInfo>
+                <FaChartPie />
+                Confianza estadística: {activeTest.confidence}%
+              </SignificanceInfo>
+            </ActiveTestCard>
+          ) : (
+            <EmptyState>
+              <EmptyStateIcon><FaFlask /></EmptyStateIcon>
+              <EmptyStateText>
+                Configura y ejecuta un nuevo test A/B para ver los resultados
+              </EmptyStateText>
+            </EmptyState>
+          )}
 
           <CompletedTestsSection>
             <SectionTitle>Tests Completados</SectionTitle>
             <TestList>
-              <TestListItem>
-                <TestListIcon><FaFlask /></TestListIcon>
-                <TestListInfo>
-                  <TestListName>Test Imágenes Homepage</TestListName>
-                  <TestListMetrics>
-                    <TestListMetric>+15% conversión</TestListMetric>
-                    <TestListMetric>7 días</TestListMetric>
-                    <TestListMetric>5,000 usuarios</TestListMetric>
-                  </TestListMetrics>
-                </TestListInfo>
-                <TestListStatus completed>Completado</TestListStatus>
-              </TestListItem>
-
-              <TestListItem>
-                <TestListIcon><FaFlask /></TestListIcon>
-                <TestListInfo>
-                  <TestListName>Test Texto Landing Page</TestListName>
-                  <TestListMetrics>
-                    <TestListMetric>+8% engagement</TestListMetric>
-                    <TestListMetric>14 días</TestListMetric>
-                    <TestListMetric>10,000 usuarios</TestListMetric>
-                  </TestListMetrics>
-                </TestListInfo>
-                <TestListStatus completed>Completado</TestListStatus>
-              </TestListItem>
+              {completedTests.map((test, index) => (
+                <TestListItem key={index}>
+                  <TestListIcon><FaFlask /></TestListIcon>
+                  <TestListInfo>
+                    <TestListName>{test.name}</TestListName>
+                    <TestListMetrics>
+                      <TestListMetric>{test.metrics.conversion} conversión</TestListMetric>
+                      <TestListMetric>{test.metrics.duration}</TestListMetric>
+                      <TestListMetric>{test.metrics.users} usuarios</TestListMetric>
+                    </TestListMetrics>
+                  </TestListInfo>
+                  <TestListStatus completed>Completado</TestListStatus>
+                </TestListItem>
+              ))}
             </TestList>
           </CompletedTestsSection>
         </ResultsSection>
@@ -292,6 +356,24 @@ const StartTestButton = styled.button`
   
   &:hover {
     background: #4A7A8C;
+  }
+
+  &:disabled {
+    background: #CBD5E0;
+    cursor: not-allowed;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
 
@@ -461,6 +543,52 @@ const TestListMetric = styled.span`
 const TestListStatus = styled.div`
   color: ${props => props.completed ? '#48BB78' : '#77AABD'};
   font-weight: 500;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #666;
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: #F7FAFC;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+`;
+
+const EmptyStateIcon = styled.div`
+  font-size: 3rem;
+  color: #CBD5E0;
+  margin-bottom: 1rem;
+`;
+
+const EmptyStateText = styled.p`
+  color: #4A5568;
+  font-size: 1.1rem;
+  max-width: 400px;
+`;
+
+const ChartContainer = styled.div`
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 5px;
+`;
+
+const ChartTitle = styled.h4`
+  color: #2E4756;
+  margin-bottom: 1rem;
+  font-size: 1rem;
 `;
 
 export default ABTesting;

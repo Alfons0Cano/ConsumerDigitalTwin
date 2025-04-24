@@ -1,50 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaChartLine, FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaDownload } from 'react-icons/fa';
+import { FaChartLine, FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaDownload, FaChartBar, FaShieldAlt, FaLightbulb } from 'react-icons/fa';
+import { getInvestmentRiskData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const InvestmentRisk = () => {
-  const [investmentAmount, setInvestmentAmount] = useState('');
-  const [marketSegment, setMarketSegment] = useState('');
+  const [investmentAmount, setInvestmentAmount] = useState('50000');
+  const [marketSegment, setMarketSegment] = useState('b2b');
   const [timeframe, setTimeframe] = useState('12');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleAnalyze = (e) => {
-    e.preventDefault();
-    // Aquí iría la lógica de análisis
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const results = getInvestmentRiskData(investmentAmount, marketSegment, timeframe);
+      setData(results);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const riskFactors = [
-    { id: 1, name: 'Mercado', level: 'alto', score: 85, trend: 'increasing' },
-    { id: 2, name: 'Competencia', level: 'medio', score: 65, trend: 'stable' },
-    { id: 3, name: 'Tecnológico', level: 'bajo', score: 35, trend: 'decreasing' },
-    { id: 4, name: 'Regulatorio', level: 'medio', score: 55, trend: 'stable' },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [investmentAmount, marketSegment, timeframe]);
 
-  const recommendations = [
-    {
-      id: 1,
-      type: 'warning',
-      title: 'Alta Volatilidad del Mercado',
-      description: 'Considerar diversificación en diferentes segmentos',
-      icon: FaExclamationTriangle,
-      priority: 'alta'
-    },
-    {
-      id: 2,
-      type: 'success',
-      title: 'Oportunidad de Crecimiento',
-      description: 'Mercado emergente con potencial de expansión',
-      icon: FaCheckCircle,
-      priority: 'media'
-    },
-    {
-      id: 3,
-      type: 'info',
-      title: 'Cambios Regulatorios',
-      description: 'Nuevas normativas previstas para Q3 2024',
-      icon: FaInfoCircle,
-      priority: 'baja'
-    },
-  ];
+  const handleAnalyze = async (e) => {
+    e.preventDefault();
+    await fetchData();
+  };
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <LoadingMessage>Analizando riesgos de inversión...</LoadingMessage>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -77,7 +73,6 @@ const InvestmentRisk = () => {
                 value={marketSegment}
                 onChange={(e) => setMarketSegment(e.target.value)}
               >
-                <option value="">Seleccionar segmento</option>
                 <option value="b2b">B2B</option>
                 <option value="b2c">B2C</option>
                 <option value="d2c">D2C</option>
@@ -102,10 +97,28 @@ const InvestmentRisk = () => {
             </AnalyzeButton>
           </AnalysisForm>
 
+          <SummarySection>
+            <SummaryCard>
+              <SummaryIcon><FaChartBar /></SummaryIcon>
+              <SummaryValue>{data.summary.totalRisk}%</SummaryValue>
+              <SummaryLabel>Riesgo Total</SummaryLabel>
+            </SummaryCard>
+            <SummaryCard>
+              <SummaryIcon><FaShieldAlt /></SummaryIcon>
+              <SummaryValue>{data.summary.potentialReturn}%</SummaryValue>
+              <SummaryLabel>Retorno Potencial</SummaryLabel>
+            </SummaryCard>
+            <SummaryCard>
+              <SummaryIcon><FaLightbulb /></SummaryIcon>
+              <SummaryValue>{data.summary.confidence}%</SummaryValue>
+              <SummaryLabel>Confianza</SummaryLabel>
+            </SummaryCard>
+          </SummarySection>
+
           <RiskFactorsSection>
             <SectionTitle>Factores de Riesgo</SectionTitle>
             <RiskGrid>
-              {riskFactors.map(factor => (
+              {data.riskFactors.map(factor => (
                 <RiskCard key={factor.id} level={factor.level}>
                   <RiskName>{factor.name}</RiskName>
                   <RiskScore>{factor.score}%</RiskScore>
@@ -115,16 +128,57 @@ const InvestmentRisk = () => {
                   <RiskTrend trend={factor.trend}>
                     Tendencia: {factor.trend === 'increasing' ? '↑' : factor.trend === 'decreasing' ? '↓' : '→'}
                   </RiskTrend>
+                  <RiskDetails>
+                    {Object.entries(factor.details).map(([key, value]) => (
+                      <DetailItem key={key}>
+                        <DetailLabel>{key}:</DetailLabel>
+                        <DetailValue>{value}</DetailValue>
+                      </DetailItem>
+                    ))}
+                  </RiskDetails>
                 </RiskCard>
               ))}
             </RiskGrid>
           </RiskFactorsSection>
+
+          <MarketAnalysisSection>
+            <SectionTitle>Análisis de Mercado</SectionTitle>
+            <MarketGrid>
+              <MarketCard>
+                <MarketTitle>Tamaño del Mercado</MarketTitle>
+                <MarketValue>€{data.marketAnalysis.size.toLocaleString()}</MarketValue>
+              </MarketCard>
+              <MarketCard>
+                <MarketTitle>Crecimiento</MarketTitle>
+                <MarketValue>{data.marketAnalysis.growth}%</MarketValue>
+              </MarketCard>
+              <MarketCard>
+                <MarketTitle>Competencia</MarketTitle>
+                <MarketValue>{data.marketAnalysis.competition}%</MarketValue>
+              </MarketCard>
+              <MarketCard>
+                <MarketTitle>Barreras de Entrada</MarketTitle>
+                <MarketValue>{data.marketAnalysis.barriers}%</MarketValue>
+              </MarketCard>
+            </MarketGrid>
+            <ChartContainer>
+              <ChartTitle>Tendencia de Mercado</ChartTitle>
+              <LineChart 
+                data={data.marketAnalysis.trends.map(t => ({
+                  date: `Mes ${t.month}`,
+                  value: t.value
+                }))}
+                color="#77AABD"
+                height={200}
+              />
+            </ChartContainer>
+          </MarketAnalysisSection>
         </MainSection>
 
         <SideSection>
           <SectionTitle>Recomendaciones</SectionTitle>
           <RecommendationsList>
-            {recommendations.map(rec => (
+            {data.recommendations.map(rec => (
               <RecommendationCard key={rec.id} type={rec.type}>
                 <RecommendationIcon>
                   <rec.icon />
@@ -134,6 +188,16 @@ const InvestmentRisk = () => {
                   <RecommendationDescription>
                     {rec.description}
                   </RecommendationDescription>
+                  <RecommendationDetails>
+                    <DetailItem>
+                      <DetailLabel>Impacto:</DetailLabel>
+                      <DetailValue>{rec.impact}</DetailValue>
+                    </DetailItem>
+                    <DetailItem>
+                      <DetailLabel>Plazo:</DetailLabel>
+                      <DetailValue>{rec.timeframe}</DetailValue>
+                    </DetailItem>
+                  </RecommendationDetails>
                   <PriorityTag priority={rec.priority}>
                     Prioridad {rec.priority}
                   </PriorityTag>
@@ -141,6 +205,21 @@ const InvestmentRisk = () => {
               </RecommendationCard>
             ))}
           </RecommendationsList>
+
+          <RiskMitigationSection>
+            <SectionTitle>Estrategias de Mitigación</SectionTitle>
+            <MitigationList>
+              {data.riskAssessment.mitigation.strategies.map((strategy, index) => (
+                <MitigationItem key={index}>
+                  <MitigationNumber>{index + 1}</MitigationNumber>
+                  <MitigationText>{strategy}</MitigationText>
+                </MitigationItem>
+              ))}
+            </MitigationList>
+            <MitigationEffectiveness>
+              Efectividad: {data.riskAssessment.mitigation.effectiveness}%
+            </MitigationEffectiveness>
+          </RiskMitigationSection>
 
           <ExportSection>
             <ExportButton>
@@ -412,6 +491,173 @@ const ExportButton = styled.button`
     background: #2E4756;
     color: white;
   }
+`;
+
+const SummarySection = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const SummaryCard = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const SummaryIcon = styled.div`
+  font-size: 2rem;
+  color: #77AABD;
+  margin-bottom: 1rem;
+`;
+
+const SummaryValue = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2E4756;
+  margin-bottom: 0.5rem;
+`;
+
+const SummaryLabel = styled.div`
+  color: #718096;
+  font-size: 0.9rem;
+`;
+
+const RiskDetails = styled.div`
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const DetailItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+`;
+
+const DetailLabel = styled.span`
+  color: #718096;
+  text-transform: capitalize;
+`;
+
+const DetailValue = styled.span`
+  color: #2E4756;
+  font-weight: 500;
+`;
+
+const MarketAnalysisSection = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const MarketGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+`;
+
+const MarketCard = styled.div`
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const MarketTitle = styled.div`
+  font-size: 0.9rem;
+  color: #718096;
+  margin-bottom: 0.5rem;
+`;
+
+const MarketValue = styled.div`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2E4756;
+`;
+
+const ChartContainer = styled.div`
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const ChartTitle = styled.h4`
+  color: #2E4756;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+`;
+
+const RecommendationDetails = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const RiskMitigationSection = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+`;
+
+const MitigationList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const MitigationItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #F7FAFC;
+  border-radius: 8px;
+`;
+
+const MitigationNumber = styled.div`
+  width: 24px;
+  height: 24px;
+  background: #77AABD;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+`;
+
+const MitigationText = styled.div`
+  flex: 1;
+  font-size: 0.9rem;
+  color: #2E4756;
+`;
+
+const MitigationEffectiveness = styled.div`
+  text-align: center;
+  font-size: 0.9rem;
+  color: #718096;
+  margin-top: 1rem;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
 `;
 
 export default InvestmentRisk;

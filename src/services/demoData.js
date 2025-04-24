@@ -1,6 +1,6 @@
 // Demo data service for providing realistic test data
 import { faker } from '@faker-js/faker';
-import { FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin, FaExclamationTriangle, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 
 // Generate random metrics with realistic trends
 export const getDemoMetrics = () => ({
@@ -354,6 +354,140 @@ export const getAdPlatformOptimizationData = (platform = 'all', dateRange = '30d
       averageCTR: (metrics.reduce((sum, m) => sum + parseFloat(m.ctr), 0) / metrics.length).toFixed(1),
       averageCPC: (metrics.reduce((sum, m) => sum + parseFloat(m.cpc), 0) / metrics.length).toFixed(2),
       averageROI: Math.floor(metrics.reduce((sum, m) => sum + m.roi, 0) / metrics.length)
+    }
+  };
+};
+
+// Generate investment risk analysis data
+export const getInvestmentRiskData = (investmentAmount, marketSegment, timeframe) => {
+  const baseAmount = parseFloat(investmentAmount) || 50000;
+  const months = parseInt(timeframe) || 12;
+
+  const riskFactors = [
+    {
+      id: 1,
+      name: 'Mercado',
+      level: 'alto',
+      score: Math.floor(Math.random() * 20 + 75), // 75-95%
+      trend: 'increasing',
+      details: {
+        volatility: (Math.random() * 10 + 20).toFixed(1), // 20-30%
+        marketSize: Math.floor(Math.random() * 1000000 + 5000000), // 5M-6M
+        growthRate: (Math.random() * 5 + 5).toFixed(1) // 5-10%
+      }
+    },
+    {
+      id: 2,
+      name: 'Competencia',
+      level: 'medio',
+      score: Math.floor(Math.random() * 30 + 50), // 50-80%
+      trend: 'stable',
+      details: {
+        competitors: Math.floor(Math.random() * 20 + 10), // 10-30
+        marketShare: (Math.random() * 10 + 5).toFixed(1), // 5-15%
+        entryBarriers: Math.floor(Math.random() * 30 + 40) // 40-70%
+      }
+    },
+    {
+      id: 3,
+      name: 'Tecnológico',
+      level: 'bajo',
+      score: Math.floor(Math.random() * 20 + 30), // 30-50%
+      trend: 'decreasing',
+      details: {
+        innovation: Math.floor(Math.random() * 40 + 60), // 60-100%
+        adoption: (Math.random() * 20 + 30).toFixed(1), // 30-50%
+        obsolescence: Math.floor(Math.random() * 20 + 10) // 10-30%
+      }
+    },
+    {
+      id: 4,
+      name: 'Regulatorio',
+      level: 'medio',
+      score: Math.floor(Math.random() * 30 + 40), // 40-70%
+      trend: 'stable',
+      details: {
+        compliance: Math.floor(Math.random() * 30 + 60), // 60-90%
+        changes: Math.floor(Math.random() * 20 + 10), // 10-30%
+        restrictions: Math.floor(Math.random() * 20 + 20) // 20-40%
+      }
+    }
+  ];
+
+  const recommendations = [
+    {
+      id: 1,
+      type: 'warning',
+      title: 'Alta Volatilidad del Mercado',
+      description: 'Considerar diversificación en diferentes segmentos para mitigar riesgos',
+      icon: FaExclamationTriangle,
+      priority: 'alta',
+      impact: 'Reducción estimada del 25% en exposición al riesgo',
+      timeframe: '3-6 meses'
+    },
+    {
+      id: 2,
+      type: 'success',
+      title: 'Oportunidad de Crecimiento',
+      description: 'Mercado emergente con potencial de expansión significativa',
+      icon: FaCheckCircle,
+      priority: 'media',
+      impact: 'Incremento estimado del 15% en ROI',
+      timeframe: '6-12 meses'
+    },
+    {
+      id: 3,
+      type: 'info',
+      title: 'Cambios Regulatorios',
+      description: 'Nuevas normativas previstas para Q3 2024 que podrían afectar al sector',
+      icon: FaInfoCircle,
+      priority: 'baja',
+      impact: 'Impacto moderado en operaciones',
+      timeframe: '12-24 meses'
+    }
+  ];
+
+  const marketAnalysis = {
+    segment: marketSegment || 'b2b',
+    size: Math.floor(baseAmount * (Math.random() * 5 + 5)), // 5-10x investment
+    growth: (Math.random() * 10 + 5).toFixed(1), // 5-15%
+    competition: Math.floor(Math.random() * 50 + 50), // 50-100%
+    barriers: Math.floor(Math.random() * 30 + 40), // 40-70%
+    trends: Array(months).fill(null).map((_, i) => ({
+      month: i + 1,
+      value: baseAmount * (1 + (Math.random() * 0.2 - 0.1)) // ±10% fluctuation
+    }))
+  };
+
+  const riskAssessment = {
+    overall: Math.floor(Math.random() * 20 + 60), // 60-80%
+    breakdown: {
+      market: Math.floor(Math.random() * 20 + 70), // 70-90%
+      financial: Math.floor(Math.random() * 20 + 60), // 60-80%
+      operational: Math.floor(Math.random() * 20 + 50), // 50-70%
+      strategic: Math.floor(Math.random() * 20 + 40) // 40-60%
+    },
+    mitigation: {
+      strategies: [
+        'Diversificación de inversiones',
+        'Análisis continuo de mercado',
+        'Monitoreo de competidores',
+        'Adaptación a cambios regulatorios'
+      ],
+      effectiveness: Math.floor(Math.random() * 20 + 70) // 70-90%
+    }
+  };
+
+  return {
+    riskFactors,
+    recommendations,
+    marketAnalysis,
+    riskAssessment,
+    summary: {
+      totalRisk: Math.floor(Math.random() * 20 + 60), // 60-80%
+      potentialReturn: (Math.random() * 20 + 10).toFixed(1), // 10-30%
+      confidence: Math.floor(Math.random() * 10 + 85), // 85-95%
+      timeframe: `${months} meses`
     }
   };
 }; 

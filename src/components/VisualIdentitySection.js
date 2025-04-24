@@ -36,10 +36,11 @@ const VisualIdentitySection = () => {
           </IdentityDescription>
           
           <IdentityTitle>Lema</IdentityTitle>
+          <Motto>"De las simulaciones digitales, a los logros reales"</Motto>
           <IdentityDescription>
-            "De las simulaciones digitales, a los logros reales" - Este lema refleja nuestra 
-            capacidad de transformar las pruebas digitales en resultados tangibles y medibles 
-            para las empresas, demostrando el valor real de nuestra tecnología en el mundo empresarial.
+            Este lema refleja nuestra capacidad de transformar las pruebas digitales en resultados 
+            tangibles y medibles para las empresas, demostrando el valor real de nuestra tecnología 
+            en el mundo empresarial.
           </IdentityDescription>
         </IdentityContent>
       </ContentContainer>
@@ -98,6 +99,17 @@ const IdentityDescription = styled.p`
   line-height: 1.6;
   font-size: 1.1rem;
   margin-bottom: 30px;
+`;
+
+const Motto = styled.h2`
+  color: ${theme.primary};
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: ${theme.white};
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 `;
 
 export default VisualIdentitySection; 

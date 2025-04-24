@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaRocket, FaChartLine, FaUsers, FaChartBar, FaMoneyBillWave, FaShieldAlt, FaShoppingCart, FaComments, FaChartPie } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const Features = () => {
+  const navigate = useNavigate();
   const features = [
     {
       icon: <FaRocket size={40} />,
@@ -127,13 +129,18 @@ const Features = () => {
           </FeatureCard>
         ))}
       </FeaturesGrid>
+      <BackButtonContainer>
+        <BackButton onClick={() => navigate('/')}>
+          Volver a la página principal
+        </BackButton>
+      </BackButtonContainer>
     </FeaturesContainer>
   );
 };
 
 const FeaturesContainer = styled.div`
   padding: 80px 50px;
-  padding-top: 150px;
+  padding-top: 100px;
   background-color: #F7FAFC;
 `;
 
@@ -209,6 +216,29 @@ const DetailItem = styled.li`
     color: #77AABD;
     position: absolute;
     left: 0;
+  }
+`;
+
+const BackButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+  margin-bottom: 40px;
+`;
+
+const BackButton = styled.button`
+  background-color: #2E4756;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #4A7A8C;
+    transform: translateY(-2px);
   }
 `;
 

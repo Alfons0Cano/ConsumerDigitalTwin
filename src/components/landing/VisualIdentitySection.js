@@ -41,7 +41,7 @@ const VisualIdentitySection = () => {
 
 const Section = styled.section`
   padding: 80px 50px;
-  background-color: ${theme.background};
+  background-color: ${theme.white};
 `;
 
 const SectionTitle = styled.h2`

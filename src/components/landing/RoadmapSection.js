@@ -72,7 +72,7 @@ const RoadmapSection = () => {
 
 const Section = styled.section`
   padding: 80px 50px;
-  background-color: ${theme.white};
+  background-color: ${theme.background};
 `;
 
 const SectionTitle = styled.h2`

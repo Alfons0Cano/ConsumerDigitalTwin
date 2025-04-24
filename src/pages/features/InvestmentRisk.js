@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaChartLine, FaDownload, FaChartBar, FaShieldAlt, FaLightbulb } from 'react-icons/fa';
+import { FaChartLine, FaChartBar, FaShieldAlt, FaLightbulb } from 'react-icons/fa';
 import { getInvestmentRiskData } from '../../services/demoData';
 import LineChart from '../../components/charts/LineChart';
 

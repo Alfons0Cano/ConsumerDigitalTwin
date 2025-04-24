@@ -68,33 +68,38 @@ const HeroSubtitle = styled.p`
 const HeroButtons = styled.div`
   display: flex;
   gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 const Button = styled.button`
-  padding: 12px 24px;
+  padding: 15px;
   border-radius: 5px;
   font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 400px;
 `;
 
 const PrimaryButton = styled(Button)`
-  background-color: ${theme.primary};
+  background: ${theme.primary};
   color: ${theme.white};
   border: none;
   
   &:hover {
-    background-color: ${theme.accent};
+    background: ${theme.accent};
   }
 `;
 
 const SecondaryButton = styled(Button)`
-  background-color: transparent;
+  background: transparent;
   color: ${theme.primary};
   border: 2px solid ${theme.primary};
   
   &:hover {
-    background-color: ${theme.primary};
+    background: ${theme.primary};
     color: ${theme.white};
   }
 `;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaRocket, FaChartLine, FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { theme } from '../../theme';
 
 const FeaturesSection = () => {
   const navigate = useNavigate();
@@ -47,14 +48,14 @@ const FeaturesSection = () => {
 
 const SectionContainer = styled.section`
   padding: 80px 50px;
-  background-color: #F7FAFC;
+  background-color: ${theme.background};
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 60px;
-  color: #2E4756;
+  color: ${theme.primary};
 `;
 
 const FeatureGrid = styled.div`
@@ -66,7 +67,7 @@ const FeatureGrid = styled.div`
 `;
 
 const FeatureCard = styled.div`
-  background-color: #FFFFFF;
+  background-color: ${theme.white};
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -78,35 +79,37 @@ const FeatureCard = styled.div`
 `;
 
 const FeatureIcon = styled.div`
-  color: #77AABD;
+  color: ${theme.primary};
   margin-bottom: 20px;
 `;
 
 const FeatureTitle = styled.h3`
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: #2D3748;
+  color: ${theme.text};
 `;
 
 const FeatureDescription = styled.p`
-  color: #4A5568;
+  color: ${theme.textLight};
   line-height: 1.6;
 `;
 
 const ViewMoreButton = styled.button`
   display: block;
   margin: 40px auto 0;
-  padding: 12px 24px;
-  background-color: #2E4756;
-  color: #FFFFFF;
+  padding: 15px;
+  background: ${theme.primary};
+  color: ${theme.white};
   border: none;
+  width: 100%;
+  max-width: 400px;
   border-radius: 5px;
   font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   
   &:hover {
-    background-color: #4A7A8C;
+    background: ${theme.accent};
   }
 `;
 

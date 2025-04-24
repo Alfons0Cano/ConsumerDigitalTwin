@@ -1,5 +1,6 @@
 // Demo data service for providing realistic test data
 import { faker } from '@faker-js/faker';
+import { FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 // Generate random metrics with realistic trends
 export const getDemoMetrics = () => ({
@@ -240,6 +241,119 @@ export const getPricingImpactData = (currentPrice, competitorPrices, margin) => 
       pricePosition: basePrice < avgCompetitorPrice ? 'below' : 'above',
       priceDifference: ((basePrice - avgCompetitorPrice) / avgCompetitorPrice * 100).toFixed(1),
       marginAnalysis: `El margen actual de ${marginPercent}% es ${marginPercent > 35 ? 'alto' : marginPercent < 25 ? 'bajo' : 'óptimo'} para el sector`
+    }
+  };
+};
+
+// Generate ad platform optimization data
+export const getAdPlatformOptimizationData = (platform = 'all', dateRange = '30d', budget = 5000) => {
+  const platforms = [
+    { id: 'facebook', name: 'Facebook', icon: FaFacebook, color: '#1877F2' },
+    { id: 'google', name: 'Google Ads', icon: FaGoogle, color: '#4285F4' },
+    { id: 'instagram', name: 'Instagram', icon: FaInstagram, color: '#E4405F' },
+    { id: 'twitter', name: 'Twitter', icon: FaTwitter, color: '#1DA1F2' },
+    { id: 'linkedin', name: 'LinkedIn', icon: FaLinkedin, color: '#0A66C2' }
+  ];
+
+  const metrics = platforms.map(platform => ({
+    id: platform.id,
+    platform: platform.id,
+    ctr: (Math.random() * 2 + 2).toFixed(1), // 2-4%
+    cpc: (Math.random() * 0.4 + 0.3).toFixed(2), // €0.30-0.70
+    conversion: (Math.random() * 2 + 2).toFixed(1), // 2-4%
+    roi: Math.floor(Math.random() * 100 + 150), // 150-250%
+    spend: Math.floor(budget * (Math.random() * 0.3 + 0.1)), // 10-40% of budget
+    impressions: Math.floor(Math.random() * 50000 + 10000), // 10k-60k
+    clicks: Math.floor(Math.random() * 2000 + 500), // 500-2500
+    conversions: Math.floor(Math.random() * 100 + 50) // 50-150
+  }));
+
+  // Generate performance trends with realistic data
+  const performanceTrends = platforms.map(platform => {
+    const days = dateRange === '7d' ? 7 : dateRange === '90d' ? 90 : 30;
+    const baseValue = Math.random() * 100 + 50; // Base value between 50-150
+    const trend = Array(days).fill(null).map((_, i) => {
+      const date = new Date(Date.now() - (days - i - 1) * 24 * 60 * 60 * 1000);
+      const value = baseValue + (Math.random() * 20 - 10); // Random fluctuation
+      return {
+        date: date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' }),
+        value: Math.max(0, Math.floor(value))
+      };
+    });
+    return {
+      platform: platform.id,
+      data: trend
+    };
+  });
+
+  const recommendations = [
+    {
+      platform: 'google',
+      title: 'Optimizar Palabras Clave',
+      description: 'Identificadas 15 nuevas palabras clave con alto potencial y bajo CPC',
+      impact: 'Reducción estimada del 20% en CPC',
+      difficulty: 'Media',
+      priority: 'Alta'
+    },
+    {
+      platform: 'facebook',
+      title: 'Ajustar Segmentación',
+      description: 'Refinar segmentación por edad y comportamiento para mejorar CTR',
+      impact: 'Incremento estimado del 15% en CTR',
+      difficulty: 'Baja',
+      priority: 'Media'
+    },
+    {
+      platform: 'instagram',
+      title: 'Contenido Visual',
+      description: 'Aumentar uso de Reels para mejorar engagement y reducir costos',
+      impact: 'Incremento estimado del 25% en engagement',
+      difficulty: 'Alta',
+      priority: 'Alta'
+    },
+    {
+      platform: 'twitter',
+      title: 'Optimizar Timing',
+      description: 'Ajustar horarios de publicación según análisis de engagement',
+      impact: 'Incremento estimado del 30% en alcance',
+      difficulty: 'Baja',
+      priority: 'Media'
+    },
+    {
+      platform: 'linkedin',
+      title: 'Contenido B2B',
+      description: 'Desarrollar contenido específico para audiencia profesional',
+      impact: 'Incremento estimado del 40% en conversiones',
+      difficulty: 'Media',
+      priority: 'Alta'
+    }
+  ];
+
+  const budgetAllocation = {
+    current: platforms.map(p => ({
+      platform: p.id,
+      percentage: Math.floor(Math.random() * 30 + 10) // 10-40%
+    })),
+    recommended: platforms.map(p => ({
+      platform: p.id,
+      percentage: Math.floor(Math.random() * 30 + 10) // 10-40%
+    }))
+  };
+
+  return {
+    platforms,
+    metrics: platform === 'all' ? metrics : metrics.filter(m => m.platform === platform),
+    recommendations: platform === 'all' ? recommendations : recommendations.filter(r => r.platform === platform),
+    performanceTrends: platform === 'all' ? performanceTrends : performanceTrends.filter(t => t.platform === platform),
+    budgetAllocation,
+    summary: {
+      totalSpend: metrics.reduce((sum, m) => sum + m.spend, 0),
+      totalImpressions: metrics.reduce((sum, m) => sum + m.impressions, 0),
+      totalClicks: metrics.reduce((sum, m) => sum + m.clicks, 0),
+      totalConversions: metrics.reduce((sum, m) => sum + m.conversions, 0),
+      averageCTR: (metrics.reduce((sum, m) => sum + parseFloat(m.ctr), 0) / metrics.length).toFixed(1),
+      averageCPC: (metrics.reduce((sum, m) => sum + parseFloat(m.cpc), 0) / metrics.length).toFixed(2),
+      averageROI: Math.floor(metrics.reduce((sum, m) => sum + m.roi, 0) / metrics.length)
     }
   };
 }; 

@@ -86,7 +86,7 @@ const DashboardLayout = ({ children }) => {
       </Sidebar>
 
       <MainContent isSidebarOpen={sidebarOpen}>
-        <TopBar>
+        <TopBar isSidebarOpen={sidebarOpen}>
           <MenuButton onClick={() => setSidebarOpen(!sidebarOpen)}>
             <FaBars />
           </MenuButton>
@@ -198,7 +198,7 @@ const MainContent = styled.div`
   margin-left: ${props => props.isSidebarOpen ? '280px' : '0'};
   transition: margin-left 0.3s ease-in-out;
   min-height: 100vh;
-  background: ${theme.background};
+  background: ${theme.white};
 `;
 
 const TopBar = styled.div`
@@ -208,6 +208,12 @@ const TopBar = styled.div`
   padding: 15px 30px;
   background: ${theme.white};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: ${props => props.isSidebarOpen ? '280px' : '0'};
+  z-index: 100;
+  transition: left 0.3s ease-in-out;
 `;
 
 const MenuButton = styled.button`
@@ -226,8 +232,9 @@ const MenuButton = styled.button`
 
 const PageContent = styled.div`
   padding: 30px;
-  height: calc(100vh - 70px);
-  overflow-y: auto;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
+  background: ${theme.white};
 `;
 
 const UserSection = styled.div`

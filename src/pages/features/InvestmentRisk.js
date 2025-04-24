@@ -49,7 +49,7 @@ const InvestmentRisk = () => {
   if (loading) {
     return (
       <PageContainer>
-        <LoadingMessage>Analizando riesgos de inversión...</LoadingMessage>
+        <LoadingMessage>Analizando riesgo de inversión...</LoadingMessage>
       </PageContainer>
     );
   }
@@ -59,23 +59,26 @@ const InvestmentRisk = () => {
       <Header>
         <Title>
           <FaChartLine />
-          <span>Evaluación de Riesgos de Inversión</span>
+          <span>Análisis de Riesgo de Inversión</span>
         </Title>
         <Description>
-          Analiza y evalúa los riesgos potenciales de tus inversiones en marketing digital
+          Evalúa y analiza los riesgos asociados a tus inversiones
         </Description>
       </Header>
 
       <Content>
-        <MainSection>
-          <AnalysisForm onSubmit={handleAnalyze}>
+        <ConfigSection>
+          <SectionTitle>Configuración del Análisis</SectionTitle>
+          
+          <ConfigForm onSubmit={handleAnalyze}>
             <FormGroup>
-              <Label>Inversión Total (€)</Label>
+              <Label>Monto de Inversión (€)</Label>
               <Input
                 type="number"
                 value={investmentAmount}
                 onChange={(e) => setInvestmentAmount(e.target.value)}
                 placeholder="Ej: 50000"
+                required
               />
             </FormGroup>
 
@@ -84,161 +87,159 @@ const InvestmentRisk = () => {
               <Select
                 value={marketSegment}
                 onChange={(e) => setMarketSegment(e.target.value)}
+                required
               >
+                <option value="">Seleccionar segmento</option>
                 <option value="b2b">B2B</option>
                 <option value="b2c">B2C</option>
-                <option value="d2c">D2C</option>
+                <option value="ecommerce">E-commerce</option>
+                <option value="saas">SaaS</option>
               </Select>
             </FormGroup>
 
             <FormGroup>
-              <Label>Período de Evaluación (meses)</Label>
-              <Select
+              <Label>Horizonte Temporal (meses)</Label>
+              <Input
+                type="number"
                 value={timeframe}
                 onChange={(e) => setTimeframe(e.target.value)}
-              >
-                <option value="3">3 meses</option>
-                <option value="6">6 meses</option>
-                <option value="12">12 meses</option>
-                <option value="24">24 meses</option>
-              </Select>
+                placeholder="Ej: 12"
+                required
+              />
             </FormGroup>
 
-            <AnalyzeButton type="submit">
-              Analizar Riesgos
+            <AnalyzeButton type="submit" disabled={loading}>
+              {loading ? 'Analizando...' : 'Analizar Riesgo'}
             </AnalyzeButton>
-          </AnalysisForm>
+          </ConfigForm>
+        </ConfigSection>
 
-          <SummarySection>
-            <SummaryCard>
-              <SummaryIcon><FaChartBar /></SummaryIcon>
-              <SummaryValue>{analysis.summary.totalRisk}%</SummaryValue>
-              <SummaryLabel>Riesgo Total</SummaryLabel>
-            </SummaryCard>
-            <SummaryCard>
-              <SummaryIcon><FaShieldAlt /></SummaryIcon>
-              <SummaryValue>{analysis.summary.potentialReturn}%</SummaryValue>
-              <SummaryLabel>Retorno Potencial</SummaryLabel>
-            </SummaryCard>
-            <SummaryCard>
-              <SummaryIcon><FaLightbulb /></SummaryIcon>
-              <SummaryValue>{analysis.summary.confidence}%</SummaryValue>
-              <SummaryLabel>Confianza</SummaryLabel>
-            </SummaryCard>
-          </SummarySection>
+        {analysis ? (
+          <ResultsSection>
+            <SummarySection>
+              <SummaryCard>
+                <SummaryIcon><FaChartBar /></SummaryIcon>
+                <SummaryValue>{analysis.summary.totalRisk}%</SummaryValue>
+                <SummaryLabel>Riesgo Total</SummaryLabel>
+              </SummaryCard>
+              <SummaryCard>
+                <SummaryIcon><FaShieldAlt /></SummaryIcon>
+                <SummaryValue>{analysis.summary.potentialReturn}%</SummaryValue>
+                <SummaryLabel>Retorno Potencial</SummaryLabel>
+              </SummaryCard>
+              <SummaryCard>
+                <SummaryIcon><FaLightbulb /></SummaryIcon>
+                <SummaryValue>{analysis.summary.confidence}%</SummaryValue>
+                <SummaryLabel>Confianza</SummaryLabel>
+              </SummaryCard>
+            </SummarySection>
 
-          <RiskFactorsSection>
-            <SectionTitle>Factores de Riesgo</SectionTitle>
-            <RiskGrid>
-              {analysis.riskFactors.map(factor => (
-                <RiskCard key={factor.id} level={factor.level}>
-                  <RiskName>{factor.name}</RiskName>
-                  <RiskScore>{factor.score}%</RiskScore>
-                  <RiskMeter>
-                    <RiskProgress width={factor.score} level={factor.level} />
-                  </RiskMeter>
-                  <RiskTrend trend={factor.trend}>
-                    Tendencia: {factor.trend === 'increasing' ? '↑' : factor.trend === 'decreasing' ? '↓' : '→'}
-                  </RiskTrend>
-                  <RiskDetails>
-                    {Object.entries(factor.details).map(([key, value]) => (
-                      <DetailItem key={key}>
-                        <DetailLabel>{key}:</DetailLabel>
-                        <DetailValue>{value}</DetailValue>
-                      </DetailItem>
-                    ))}
-                  </RiskDetails>
-                </RiskCard>
-              ))}
-            </RiskGrid>
-          </RiskFactorsSection>
+            <AnalysisGrid>
+              <RiskFactorsSection>
+                <SectionTitle>Factores de Riesgo</SectionTitle>
+                <RiskGrid>
+                  {analysis.riskFactors.map(factor => (
+                    <RiskCard key={factor.id} level={factor.level}>
+                      <RiskName>{factor.name}</RiskName>
+                      <RiskScore>{factor.score}%</RiskScore>
+                      <RiskTrend trend={factor.trend}>
+                        {factor.trend === 'increasing' ? '↑' : 
+                         factor.trend === 'decreasing' ? '↓' : '→'}
+                      </RiskTrend>
+                    </RiskCard>
+                  ))}
+                </RiskGrid>
+              </RiskFactorsSection>
 
-          <MarketAnalysisSection>
-            <SectionTitle>Análisis de Mercado</SectionTitle>
-            <MarketGrid>
-              <MarketCard>
-                <MarketTitle>Tamaño del Mercado</MarketTitle>
-                <MarketValue>€{analysis.marketAnalysis.size.toLocaleString()}</MarketValue>
-              </MarketCard>
-              <MarketCard>
-                <MarketTitle>Crecimiento</MarketTitle>
-                <MarketValue>{analysis.marketAnalysis.growth}%</MarketValue>
-              </MarketCard>
-              <MarketCard>
-                <MarketTitle>Competencia</MarketTitle>
-                <MarketValue>{analysis.marketAnalysis.competition}%</MarketValue>
-              </MarketCard>
-              <MarketCard>
-                <MarketTitle>Barreras de Entrada</MarketTitle>
-                <MarketValue>{analysis.marketAnalysis.barriers}%</MarketValue>
-              </MarketCard>
-            </MarketGrid>
-            <ChartContainer>
-              <ChartTitle>Tendencia de Mercado</ChartTitle>
-              <LineChart 
-                data={analysis.marketAnalysis.trends.map(t => ({
-                  date: `Mes ${t.month}`,
-                  value: t.value
-                }))}
-                color="#77AABD"
-                height={200}
-              />
-            </ChartContainer>
-          </MarketAnalysisSection>
-        </MainSection>
+              <MarketAnalysisSection>
+                <SectionTitle>Análisis de Mercado</SectionTitle>
+                <MarketGrid>
+                  <MarketCard>
+                    <MarketTitle>Tamaño del Mercado</MarketTitle>
+                    <MarketValue>€{analysis.marketAnalysis.size.toLocaleString()}</MarketValue>
+                  </MarketCard>
+                  <MarketCard>
+                    <MarketTitle>Crecimiento</MarketTitle>
+                    <MarketValue>{analysis.marketAnalysis.growth}%</MarketValue>
+                  </MarketCard>
+                  <MarketCard>
+                    <MarketTitle>Competencia</MarketTitle>
+                    <MarketValue>{analysis.marketAnalysis.competition}%</MarketValue>
+                  </MarketCard>
+                  <MarketCard>
+                    <MarketTitle>Barreras de Entrada</MarketTitle>
+                    <MarketValue>{analysis.marketAnalysis.barriers}%</MarketValue>
+                  </MarketCard>
+                </MarketGrid>
+                <ChartContainer>
+                  <ChartTitle>Tendencia de Mercado</ChartTitle>
+                  <LineChart 
+                    data={analysis.marketAnalysis.trends.map(t => ({
+                      date: `Mes ${t.month}`,
+                      value: t.value
+                    }))}
+                    color="#77AABD"
+                  />
+                </ChartContainer>
+              </MarketAnalysisSection>
+            </AnalysisGrid>
 
-        <SideSection>
-          <SectionTitle>Recomendaciones</SectionTitle>
-          <RecommendationsList>
-            {analysis.recommendations.map(rec => (
-              <RecommendationCard key={rec.id} type={rec.type}>
-                <RecommendationIcon>
-                  <rec.icon />
-                </RecommendationIcon>
-                <RecommendationContent>
-                  <RecommendationTitle>{rec.title}</RecommendationTitle>
-                  <RecommendationDescription>
-                    {rec.description}
-                  </RecommendationDescription>
-                  <RecommendationDetails>
-                    <DetailItem>
-                      <DetailLabel>Impacto:</DetailLabel>
-                      <DetailValue>{rec.impact}</DetailValue>
-                    </DetailItem>
-                    <DetailItem>
-                      <DetailLabel>Plazo:</DetailLabel>
-                      <DetailValue>{rec.timeframe}</DetailValue>
-                    </DetailItem>
-                  </RecommendationDetails>
-                  <PriorityTag priority={rec.priority}>
-                    Prioridad {rec.priority}
-                  </PriorityTag>
-                </RecommendationContent>
-              </RecommendationCard>
-            ))}
-          </RecommendationsList>
+            <RecommendationsSection>
+              <SectionTitle>Recomendaciones</SectionTitle>
+              <RecommendationsList>
+                {analysis.recommendations.map(rec => (
+                  <RecommendationCard key={rec.id} type={rec.type}>
+                    <RecommendationIcon>
+                      <rec.icon />
+                    </RecommendationIcon>
+                    <RecommendationContent>
+                      <RecommendationTitle>{rec.title}</RecommendationTitle>
+                      <RecommendationDescription>
+                        {rec.description}
+                      </RecommendationDescription>
+                      <RecommendationDetails>
+                        <Detail>
+                          <DetailLabel>Impacto:</DetailLabel>
+                          <DetailValue>{rec.impact}</DetailValue>
+                        </Detail>
+                        <Detail>
+                          <DetailLabel>Prioridad:</DetailLabel>
+                          <DetailValue>{rec.priority}</DetailValue>
+                        </Detail>
+                        <Detail>
+                          <DetailLabel>Plazo:</DetailLabel>
+                          <DetailValue>{rec.timeframe}</DetailValue>
+                        </Detail>
+                      </RecommendationDetails>
+                    </RecommendationContent>
+                  </RecommendationCard>
+                ))}
+              </RecommendationsList>
+            </RecommendationsSection>
 
-          <RiskMitigationSection>
-            <SectionTitle>Estrategias de Mitigación</SectionTitle>
-            <MitigationList>
-              {analysis.riskAssessment.mitigation.strategies.map((strategy, index) => (
-                <MitigationItem key={index}>
-                  <MitigationNumber>{index + 1}</MitigationNumber>
-                  <MitigationText>{strategy}</MitigationText>
-                </MitigationItem>
-              ))}
-            </MitigationList>
-            <MitigationEffectiveness>
-              Efectividad: {analysis.riskAssessment.mitigation.effectiveness}%
-            </MitigationEffectiveness>
-          </RiskMitigationSection>
-
-          <ExportSection>
-            <ExportButton>
-              <FaDownload /> Exportar Análisis Completo
-            </ExportButton>
-          </ExportSection>
-        </SideSection>
+            <RiskMitigationSection>
+              <SectionTitle>Estrategias de Mitigación</SectionTitle>
+              <MitigationList>
+                {analysis.riskAssessment.mitigation.strategies.map((strategy, index) => (
+                  <MitigationItem key={index}>
+                    <MitigationNumber>{index + 1}</MitigationNumber>
+                    <MitigationText>{strategy}</MitigationText>
+                  </MitigationItem>
+                ))}
+              </MitigationList>
+              <MitigationEffectiveness>
+                Efectividad: {analysis.riskAssessment.mitigation.effectiveness}%
+              </MitigationEffectiveness>
+            </RiskMitigationSection>
+          </ResultsSection>
+        ) : (
+          <EmptyState>
+            <EmptyStateIcon><FaChartLine /></EmptyStateIcon>
+            <EmptyStateText>
+              Configura los parámetros y ejecuta el análisis para ver los resultados
+            </EmptyStateText>
+          </EmptyState>
+        )}
       </Content>
     </PageContainer>
   );
@@ -278,19 +279,19 @@ const Content = styled.div`
   }
 `;
 
-const MainSection = styled.div`
+const ConfigSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
 `;
 
-const SideSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+const SectionTitle = styled.h2`
+  font-size: 1.3rem;
+  color: #2E4756;
+  margin-bottom: 1.5rem;
 `;
 
-const AnalysisForm = styled.form`
+const ConfigForm = styled.form`
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
@@ -349,10 +350,49 @@ const AnalyzeButton = styled.button`
   }
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 1.3rem;
+const ResultsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const SummarySection = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const SummaryCard = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const SummaryIcon = styled.div`
+  font-size: 2rem;
+  color: #77AABD;
+  margin-bottom: 1rem;
+`;
+
+const SummaryValue = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
   color: #2E4756;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const SummaryLabel = styled.div`
+  color: #718096;
+  font-size: 0.9rem;
+`;
+
+const AnalysisGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 `;
 
 const RiskFactorsSection = styled.div`
@@ -391,24 +431,6 @@ const RiskScore = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const RiskMeter = styled.div`
-  height: 8px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-`;
-
-const RiskProgress = styled.div`
-  height: 100%;
-  width: ${props => props.width}%;
-  background: ${props => 
-    props.level === 'alto' ? '#DC2626' :
-    props.level === 'medio' ? '#D97706' :
-    '#059669'
-  };
-`;
-
 const RiskTrend = styled.div`
   font-size: 0.9rem;
   color: ${props => 
@@ -416,6 +438,13 @@ const RiskTrend = styled.div`
     props.trend === 'decreasing' ? '#059669' :
     '#D97706'
   };
+`;
+
+const RecommendationsSection = styled.div`
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const RecommendationsList = styled.div`
@@ -463,88 +492,14 @@ const RecommendationDescription = styled.p`
   margin-bottom: 0.5rem;
 `;
 
-const PriorityTag = styled.span`
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  background: ${props => 
-    props.priority === 'alta' ? '#FEE2E2' :
-    props.priority === 'media' ? '#FEF3C7' :
-    '#D1FAE5'
-  };
-  color: ${props => 
-    props.priority === 'alta' ? '#DC2626' :
-    props.priority === 'media' ? '#D97706' :
-    '#059669'
-  };
-`;
-
-const ExportSection = styled.div`
-  margin-top: auto;
-`;
-
-const ExportButton = styled.button`
-  width: 100%;
-  background: none;
-  border: 1px solid #2E4756;
-  color: #2E4756;
-  padding: 0.75rem;
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  
-  &:hover {
-    background: #2E4756;
-    color: white;
-  }
-`;
-
-const SummarySection = styled.div`
+const RecommendationDetails = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-`;
-
-const SummaryCard = styled.div`
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
-
-const SummaryIcon = styled.div`
-  font-size: 2rem;
-  color: #77AABD;
-  margin-bottom: 1rem;
-`;
-
-const SummaryValue = styled.div`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #2E4756;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
 `;
 
-const SummaryLabel = styled.div`
-  color: #718096;
-  font-size: 0.9rem;
-`;
-
-const RiskDetails = styled.div`
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-`;
-
-const DetailItem = styled.div`
+const Detail = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.5rem;
@@ -606,13 +561,6 @@ const ChartTitle = styled.h4`
   font-size: 0.9rem;
 `;
 
-const RecommendationDetails = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-`;
-
 const RiskMitigationSection = styled.div`
   background: white;
   padding: 1.5rem;
@@ -661,6 +609,29 @@ const MitigationEffectiveness = styled.div`
   font-size: 0.9rem;
   color: #718096;
   margin-top: 1rem;
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  border: 1px solid #CBD5E0;
+  border-radius: 10px;
+  text-align: center;
+`;
+
+const EmptyStateIcon = styled.div`
+  font-size: 2rem;
+  color: #77AABD;
+  margin-bottom: 1rem;
+`;
+
+const EmptyStateText = styled.div`
+  font-size: 1.2rem;
+  color: #718096;
 `;
 
 const LoadingMessage = styled.div`

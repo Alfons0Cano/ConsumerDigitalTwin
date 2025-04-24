@@ -2,16 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FaRocket, FaChartLine, FaGlobe, FaRobot } from 'react-icons/fa';
-
-const theme = {
-  primary: '#2E4756',
-  secondary: '#77AABD',
-  accent: '#4A7A8C',
-  text: '#2D3748',
-  textLight: '#4A5568',
-  background: '#F7FAFC',
-  white: '#FFFFFF'
-};
+import { theme } from '../theme';
 
 const RoadmapSection = () => {
   return (

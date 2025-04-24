@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../theme';
-import { FaCheck, FaTimes, FaUsers, FaChartLine, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 const CompetitionSection = () => {
   const competitors = [
@@ -73,7 +73,7 @@ const CompetitionSection = () => {
                 <List>
                   {competitor.weaknesses.map((weakness, i) => (
                     <ListItem key={i}>
-                      <FaExclamationTriangle color={theme.warning} />
+                      <FaTimes color={theme.error} />
                       {weakness}
                     </ListItem>
                   ))}

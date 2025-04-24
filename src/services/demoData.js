@@ -111,4 +111,75 @@ export const getABTestingData = (config) => {
       value: Math.floor(Math.random() * 100 + 50) // Random daily conversions
     }))
   };
+};
+
+// Generate trend prediction data
+export const getTrendPredictionData = (period = '30d', category = 'all') => {
+  const categories = ['tech', 'eco', 'health', 'ecommerce'];
+  const trends = [
+    {
+      id: 1,
+      name: 'Sostenibilidad',
+      growth: Math.floor(Math.random() * 30 + 70),
+      confidence: Math.floor(Math.random() * 10 + 85),
+      category: 'eco',
+      data: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        value: Math.floor(Math.random() * 100 + 50)
+      }))
+    },
+    {
+      id: 2,
+      name: 'Comercio Social',
+      growth: Math.floor(Math.random() * 30 + 70),
+      confidence: Math.floor(Math.random() * 10 + 85),
+      category: 'ecommerce',
+      data: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        value: Math.floor(Math.random() * 100 + 50)
+      }))
+    },
+    {
+      id: 3,
+      name: 'Realidad Aumentada',
+      growth: Math.floor(Math.random() * 30 + 70),
+      confidence: Math.floor(Math.random() * 10 + 85),
+      category: 'tech',
+      data: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        value: Math.floor(Math.random() * 100 + 50)
+      }))
+    },
+    {
+      id: 4,
+      name: 'Bienestar Mental',
+      growth: Math.floor(Math.random() * 30 + 70),
+      confidence: Math.floor(Math.random() * 10 + 85),
+      category: 'health',
+      data: Array(30).fill(null).map((_, i) => ({
+        date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        value: Math.floor(Math.random() * 100 + 50)
+      }))
+    }
+  ];
+
+  const insights = [
+    {
+      title: 'Crecimiento Rápido',
+      text: `La tendencia de ${trends[0].name.toLowerCase()} muestra un crecimiento acelerado del ${trends[0].growth}% en los últimos ${period === '30d' ? '30' : period === '90d' ? '90' : '7'} días.`
+    },
+    {
+      title: 'Alta Confianza',
+      text: `El análisis predice con un ${trends[0].confidence}% de confianza que esta tendencia continuará durante los próximos 6 meses.`
+    },
+    {
+      title: 'Oportunidad de Mercado',
+      text: `Se recomienda desarrollar productos/servicios alineados con ${trends[0].name.toLowerCase()} para capitalizar esta tendencia.`
+    }
+  ];
+
+  return {
+    trends: category === 'all' ? trends : trends.filter(t => t.category === category),
+    insights
+  };
 }; 

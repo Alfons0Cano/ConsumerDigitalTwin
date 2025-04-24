@@ -7,6 +7,7 @@ import EssenceSection from '../components/EssenceSection';
 import VisualIdentitySection from '../components/VisualIdentitySection';
 import RoadmapSection from '../components/RoadmapSection';
 import FeaturesSection from '../components/FeaturesSection';
+import Navbar from '../components/Navbar';
 
 const theme = {
   primary: '#2E4756',
@@ -23,15 +24,7 @@ const Landing = () => {
 
   return (
     <LandingContainer>
-      <Navbar>
-        <LogoContainer>
-          <LogoImage src="/LogoWithText.png" alt="CONSUMER DIGITAL TWIN AI" />
-        </LogoContainer>
-        <NavItems>
-          <NavItem onClick={() => navigate('/login')}>Iniciar Sesión</NavItem>
-          <NavButton onClick={() => navigate('/login')}>Prueba Gratis</NavButton>
-        </NavItems>
-      </Navbar>
+      <Navbar />
 
       <HeroSection>
         <HeroContent>
@@ -77,52 +70,7 @@ const Landing = () => {
 const LandingContainer = styled.div`
   font-family: 'Poppins', sans-serif;
   background-color: ${theme.background};
-`;
-
-const Navbar = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 50px;
-  background-color: ${theme.white};
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-`;
-
-const LogoContainer = styled.div`
-  height: 40px;
-`;
-
-const LogoImage = styled.img`
-  height: 100%;
-  width: auto;
-`;
-
-const NavItems = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-`;
-
-const NavItem = styled.div`
-  cursor: pointer;
-  color: ${theme.text};
-  &:hover {
-    color: ${theme.primary};
-  }
-`;
-
-const NavButton = styled.button`
-  background-color: ${theme.primary};
-  color: ${theme.white};
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  
-  &:hover {
-    background-color: ${theme.accent};
-  }
+  padding-top: 70px;
 `;
 
 const HeroSection = styled.section`

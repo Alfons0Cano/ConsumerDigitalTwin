@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaRocket, FaChartLine, FaUsers, FaChartBar, FaMoneyBillWave, FaShieldAlt, FaShoppingCart, FaComments, FaChartPie } from 'react-icons/fa';
+import Navbar from '../components/Navbar';
 
 const Features = () => {
   const features = [
@@ -107,6 +108,7 @@ const Features = () => {
 
   return (
     <FeaturesContainer>
+      <Navbar />
       <Header>
         <Title>Funcionalidades de DigitalTwin</Title>
         <Subtitle>Descubre todas las herramientas que te ayudarán a optimizar tus campañas de marketing</Subtitle>
@@ -131,6 +133,7 @@ const Features = () => {
 
 const FeaturesContainer = styled.div`
   padding: 80px 50px;
+  padding-top: 150px;
   background-color: #F7FAFC;
 `;
 

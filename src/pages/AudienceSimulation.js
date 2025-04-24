@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaUsers, FaChartBar, FaCog } from 'react-icons/fa';
+import { getAudienceSimulationData } from '../services/demoData';
+import LineChart from '../components/charts/LineChart';
 
 const AudienceSimulation = () => {
   const [selectedScenario, setSelectedScenario] = useState('default');
@@ -10,10 +12,21 @@ const AudienceSimulation = () => {
     gender: 'all',
     location: 'españa'
   });
+  const [simulationResults, setSimulationResults] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSimulation = () => {
-    // Aquí iría la lógica de simulación
-    console.log('Iniciando simulación...', { selectedScenario, audienceSize, demographics });
+  const handleSimulation = async () => {
+    setLoading(true);
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      const results = getAudienceSimulationData(audienceSize);
+      setSimulationResults(results);
+    } catch (error) {
+      console.error('Error running simulation:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -95,9 +108,9 @@ const AudienceSimulation = () => {
               </Select>
             </FormGroup>
 
-            <SimulateButton onClick={handleSimulation}>
-              <FaCog />
-              Iniciar Simulación
+            <SimulateButton onClick={handleSimulation} disabled={loading}>
+              <FaCog className={loading ? 'spinning' : ''} />
+              {loading ? 'Simulando...' : 'Iniciar Simulación'}
             </SimulateButton>
           </ConfigForm>
         </ConfigSection>
@@ -105,33 +118,46 @@ const AudienceSimulation = () => {
         <ResultsSection>
           <SectionTitle>Resultados de la Simulación</SectionTitle>
           
-          <ResultsGrid>
-            <ResultCard>
-              <ResultIcon><FaUsers /></ResultIcon>
-              <ResultTitle>Audiencia Alcanzada</ResultTitle>
-              <ResultValue>24,567</ResultValue>
-              <ResultDelta positive>+12.5%</ResultDelta>
-            </ResultCard>
+          {loading ? (
+            <LoadingMessage>Ejecutando simulación...</LoadingMessage>
+          ) : simulationResults ? (
+            <>
+              <ResultsGrid>
+                <ResultCard>
+                  <ResultIcon><FaUsers /></ResultIcon>
+                  <ResultTitle>Audiencia Alcanzada</ResultTitle>
+                  <ResultValue>{simulationResults.reached.toLocaleString()}</ResultValue>
+                  <ResultDelta positive>+12.5%</ResultDelta>
+                </ResultCard>
 
-            <ResultCard>
-              <ResultIcon><FaChartBar /></ResultIcon>
-              <ResultTitle>Tasa de Conversión</ResultTitle>
-              <ResultValue>3.8%</ResultValue>
-              <ResultDelta positive>+0.5%</ResultDelta>
-            </ResultCard>
+                <ResultCard>
+                  <ResultIcon><FaChartBar /></ResultIcon>
+                  <ResultTitle>Tasa de Conversión</ResultTitle>
+                  <ResultValue>{simulationResults.conversion}%</ResultValue>
+                  <ResultDelta positive>+0.5%</ResultDelta>
+                </ResultCard>
 
-            <ResultCard>
-              <ResultIcon><FaUsers /></ResultIcon>
-              <ResultTitle>Retención</ResultTitle>
-              <ResultValue>68%</ResultValue>
-              <ResultDelta>-2.1%</ResultDelta>
-            </ResultCard>
-          </ResultsGrid>
+                <ResultCard>
+                  <ResultIcon><FaUsers /></ResultIcon>
+                  <ResultTitle>Retención</ResultTitle>
+                  <ResultValue>{simulationResults.retention}%</ResultValue>
+                  <ResultDelta>-2.1%</ResultDelta>
+                </ResultCard>
+              </ResultsGrid>
 
-          <ChartContainer>
-            <ChartTitle>Comportamiento de la Audiencia en el Tiempo</ChartTitle>
-            {/* Aquí irá el gráfico de comportamiento */}
-          </ChartContainer>
+              <ChartContainer>
+                <ChartTitle>Comportamiento de la Audiencia en el Tiempo</ChartTitle>
+                <LineChart data={simulationResults.behavior} color="#77AABD" />
+              </ChartContainer>
+            </>
+          ) : (
+            <EmptyState>
+              <EmptyStateIcon><FaCog /></EmptyStateIcon>
+              <EmptyStateText>
+                Configura los parámetros y ejecuta la simulación para ver los resultados
+              </EmptyStateText>
+            </EmptyState>
+          )}
         </ResultsSection>
       </Content>
     </PageContainer>
@@ -229,25 +255,6 @@ const Input = styled.input`
   }
 `;
 
-const SimulateButton = styled.button`
-  background: #2E4756;
-  color: white;
-  border: none;
-  padding: 1rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  
-  &:hover {
-    background: #4A7A8C;
-  }
-`;
-
 const ResultsSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -304,6 +311,76 @@ const ChartContainer = styled.div`
 const ChartTitle = styled.h3`
   color: #2E4756;
   margin-bottom: 1rem;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #666;
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: #F7FAFC;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+`;
+
+const EmptyStateIcon = styled.div`
+  font-size: 3rem;
+  color: #CBD5E0;
+  margin-bottom: 1rem;
+`;
+
+const EmptyStateText = styled.p`
+  color: #4A5568;
+  font-size: 1.1rem;
+  max-width: 400px;
+`;
+
+const SimulateButton = styled.button`
+  background: #2E4756;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  &:hover {
+    background: #4A7A8C;
+  }
+
+  &:disabled {
+    background: #CBD5E0;
+    cursor: not-allowed;
+  }
+
+  .spinning {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 export default AudienceSimulation;

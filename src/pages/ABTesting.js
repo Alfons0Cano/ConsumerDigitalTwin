@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaFlask, FaChartPie, FaUsers, FaArrowRight } from 'react-icons/fa';
+import { FaFlask, FaChartPie, FaArrowRight } from 'react-icons/fa';
 
 const ABTesting = () => {
   const [testConfig, setTestConfig] = useState({

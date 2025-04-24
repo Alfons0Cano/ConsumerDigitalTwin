@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { FaRocket, FaChartLine, FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import PricingSection from '../components/PricingSection';
+import EssenceSection from '../components/EssenceSection';
+import VisualIdentitySection from '../components/VisualIdentitySection';
 
 const theme = {
   primary: '#2E4756',
@@ -90,6 +92,10 @@ const Landing = () => {
           </FeatureCard>
         </FeatureGrid>
       </FeaturesSection>
+
+      <EssenceSection />
+
+      <VisualIdentitySection />
 
       <PricingSection />
     </LandingContainer>

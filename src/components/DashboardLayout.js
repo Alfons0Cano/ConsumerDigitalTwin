@@ -1,46 +1,47 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   FaBars, 
   FaTimes, 
   FaChartPie,
   FaUsers,
-  FaExchangeAlt,
   FaChartLine,
-  FaMoneyBillWave,
-  FaMegaport,
   FaShieldAlt,
-  FaUserFriends,
-  FaHashtag,
   FaChartBar,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaFlask,
+  FaBullhorn,
+  FaShareAlt,
+  FaHeart,
+  FaCog
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
-
-const menuItems = [
-  { path: "/dashboard", name: "Dashboard", icon: FaChartPie },
-  { path: "/audience-simulation", name: "Simulación de Audiencia", icon: FaUsers },
-  { path: "/ab-testing", name: "Pruebas A/B", icon: FaExchangeAlt },
-  { path: "/trend-prediction", name: "Predicción de Tendencias", icon: FaChartLine },
-  { path: "/pricing-impact", name: "Impacto de Precios", icon: FaMoneyBillWave },
-  { path: "/ad-platform", name: "Optimización de Ads", icon: FaMegaport },
-  { path: "/investment-risk", name: "Evaluación de Riesgos", icon: FaShieldAlt },
-  { path: "/market-segmentation", name: "Segmentación", icon: FaUserFriends },
-  { path: "/social-media", name: "Redes Sociales", icon: FaHashtag },
-  { path: "/sentiment-analysis", name: "Análisis de Sentimiento", icon: FaChartBar }
-];
 
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
+
+  const menuItems = [
+    { path: '/dashboard', icon: FaChartLine, label: 'Dashboard' },
+    { path: '/audience-simulation', icon: FaUsers, label: 'Simulación de Audiencia' },
+    { path: '/ab-testing', icon: FaFlask, label: 'Pruebas A/B' },
+    { path: '/trend-prediction', icon: FaChartBar, label: 'Predicción de Tendencias' },
+    { path: '/pricing-impact', icon: FaBullhorn, label: 'Impacto de Precios' },
+    { path: '/ad-platform', icon: FaShieldAlt, label: 'Optimización de Plataformas' },
+    { path: '/investment-risk', icon: FaChartPie, label: 'Análisis de Riesgo' },
+    { path: '/market-segmentation', icon: FaShareAlt, label: 'Segmentación de Mercado' },
+    { path: '/social-media', icon: FaHeart, label: 'Redes Sociales' },
+    { path: '/sentiment-analysis', icon: FaCog, label: 'Análisis de Sentimientos' }
+  ];
 
   return (
     <LayoutContainer>
@@ -56,12 +57,20 @@ const DashboardLayout = ({ children }) => {
         </SidebarHeader>
 
         <SidebarNav>
-          {menuItems.map((item, index) => (
-            <SidebarLink key={index} to={item.path}>
-              {React.createElement(item.icon)}
-              <span>{item.name}</span>
-            </SidebarLink>
-          ))}
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+            return (
+              <SidebarLink 
+                key={item.path} 
+                to={item.path}
+                active={isActive}
+              >
+                <Icon />
+                <span>{item.label}</span>
+              </SidebarLink>
+            );
+          })}
         </SidebarNav>
 
         <UserSection>
@@ -167,6 +176,8 @@ const SidebarLink = styled(Link)`
   color: ${theme.white};
   text-decoration: none;
   gap: 12px;
+  transition: all 0.2s;
+  background: ${props => props.active ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
   
   &:hover {
     background: rgba(255, 255, 255, 0.1);

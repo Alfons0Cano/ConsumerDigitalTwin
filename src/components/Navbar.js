@@ -1,16 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
-const theme = {
-  primary: '#2E4756',
-  secondary: '#77AABD',
-  accent: '#4A7A8C',
-  text: '#2D3748',
-  textLight: '#4A5568',
-  background: '#F7FAFC',
-  white: '#FFFFFF'
-};
+import { theme } from '../theme';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -18,7 +9,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <NavbarContent>
-        <LogoContainer>
+        <LogoContainer onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
           <LogoImage src="/LogoWithText.png" alt="CONSUMER DIGITAL TWIN AI" />
         </LogoContainer>
         <NavItems>

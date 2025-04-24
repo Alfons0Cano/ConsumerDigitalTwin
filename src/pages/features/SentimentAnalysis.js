@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaHeart, FaComments, FaSearch } from 'react-icons/fa';
-import { getSentimentData, getTimeSeriesData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getSentimentData, getTimeSeriesData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const SentimentAnalysis = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('7d');

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaBullhorn, FaFacebook, FaGoogle, FaInstagram, FaTwitter, FaLinkedin, FaFilter, FaChartLine, FaEuroSign, FaUsers, FaDownload } from 'react-icons/fa';
-import { getAdPlatformOptimizationData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { FaBullhorn, FaFilter, FaChartLine, FaEuroSign, FaUsers } from 'react-icons/fa';
+import { getAdPlatformOptimizationData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const AdPlatformOptimization = () => {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
@@ -49,13 +49,6 @@ const AdPlatformOptimization = () => {
   const renderPlatformIconSmall = (platform) => {
     const IconComponent = data.platforms.find(p => p.id === platform).icon;
     return <IconComponent size={20} color={data.platforms.find(p => p.id === platform).color} />;
-  };
-
-  const formatChartData = (data) => {
-    return data.map(item => ({
-      x: item.date,
-      y: item.value
-    }));
   };
 
   if (loading) {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaChartLine, FaSearch, FaFilter, FaDownload } from 'react-icons/fa';
-import { getTrendPredictionData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getTrendPredictionData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const TrendPrediction = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('30d');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaChartBar, FaEuroSign, FaPercent, FaDownload, FaInfoCircle } from 'react-icons/fa';
-import { getPricingImpactData } from '../services/demoData';
+import { getPricingImpactData } from '../../services/demoData';
 
 const PricingImpact = () => {
   const [price, setPrice] = useState('');

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaFlask, FaChartPie, FaArrowRight } from 'react-icons/fa';
-import { getABTestingData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getABTestingData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const ABTesting = () => {
   const [testConfig, setTestConfig] = useState({

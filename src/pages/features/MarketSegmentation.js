@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaUsers, FaChartPie, FaSearch, FaDownload, FaChartLine, FaInfoCircle } from 'react-icons/fa';
-import { getMarketSegmentationData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getMarketSegmentationData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const MarketSegmentation = () => {
   const [selectedSegment, setSelectedSegment] = useState('all');

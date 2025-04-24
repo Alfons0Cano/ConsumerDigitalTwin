@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { theme } from '../theme';
+import { theme } from '../../theme';
 
 const HeroSection = () => {
   const navigate = useNavigate();

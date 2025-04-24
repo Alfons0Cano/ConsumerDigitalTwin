@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaUsers, FaChartBar, FaCog } from 'react-icons/fa';
-import { getAudienceSimulationData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getAudienceSimulationData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const AudienceSimulation = () => {
   const [selectedScenario, setSelectedScenario] = useState('default');

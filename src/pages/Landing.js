@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import PricingSection from '../components/PricingSection';
-import EssenceSection from '../components/EssenceSection';
-import VisualIdentitySection from '../components/VisualIdentitySection';
-import RoadmapSection from '../components/RoadmapSection';
-import FeaturesSection from '../components/FeaturesSection';
+import PricingSection from '../components/landing/PricingSection';
+import EssenceSection from '../components/landing/EssenceSection';
+import VisualIdentitySection from '../components/landing/VisualIdentitySection';
+import RoadmapSection from '../components/landing/RoadmapSection';
+import FeaturesSection from '../components/landing/FeaturesSection';
 import Navbar from '../components/Navbar';
-import HeroSection from '../components/HeroSection';
+import HeroSection from '../components/landing/HeroSection';
 import { theme } from '../theme';
 
 const Landing = () => {

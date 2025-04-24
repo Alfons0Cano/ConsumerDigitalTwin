@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { theme } from '../theme';
+import { theme } from '../../theme';
 
 const VisualIdentitySection = () => {
   return (

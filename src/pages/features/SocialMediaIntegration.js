@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-  FaYoutube,
   FaChartLine,
   FaSync,
   FaPlus,
@@ -13,12 +8,10 @@ import {
   FaChartBar,
   FaBullhorn
 } from 'react-icons/fa';
-import { getSocialMediaIntegrationData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { getSocialMediaIntegrationData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const SocialMediaIntegration = () => {
-  const [selectedPlatform, setSelectedPlatform] = useState('all');
-  const [dateRange, setDateRange] = useState('7d');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +21,7 @@ const SocialMediaIntegration = () => {
       try {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const results = getSocialMediaIntegrationData(selectedPlatform, dateRange);
+        const results = getSocialMediaIntegrationData();
         setData(results);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -38,7 +31,7 @@ const SocialMediaIntegration = () => {
     };
 
     fetchData();
-  }, [selectedPlatform, dateRange]);
+  }, []);
 
   const handleConnectPlatform = (platformId) => {
     // Simulate platform connection

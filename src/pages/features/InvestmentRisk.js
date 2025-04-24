@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaChartLine, FaExclamationTriangle, FaCheckCircle, FaInfoCircle, FaDownload, FaChartBar, FaShieldAlt, FaLightbulb } from 'react-icons/fa';
-import { getInvestmentRiskData } from '../services/demoData';
-import LineChart from '../components/charts/LineChart';
+import { FaChartLine, FaDownload, FaChartBar, FaShieldAlt, FaLightbulb } from 'react-icons/fa';
+import { getInvestmentRiskData } from '../../services/demoData';
+import LineChart from '../../components/charts/LineChart';
 
 const InvestmentRisk = () => {
-  const [investmentAmount, setInvestmentAmount] = useState('50000');
-  const [marketSegment, setMarketSegment] = useState('b2b');
-  const [timeframe, setTimeframe] = useState('12');
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [investmentAmount, setInvestmentAmount] = useState('');
+  const [marketSegment, setMarketSegment] = useState('');
+  const [timeframe, setTimeframe] = useState('');
+  const [analysis, setAnalysis] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       const results = getInvestmentRiskData(investmentAmount, marketSegment, timeframe);
-      setData(results);
+      setAnalysis(results);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -26,7 +26,9 @@ const InvestmentRisk = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (investmentAmount && marketSegment && timeframe) {
+      fetchData();
+    }
   }, [investmentAmount, marketSegment, timeframe]);
 
   const handleAnalyze = async (e) => {
@@ -100,17 +102,17 @@ const InvestmentRisk = () => {
           <SummarySection>
             <SummaryCard>
               <SummaryIcon><FaChartBar /></SummaryIcon>
-              <SummaryValue>{data.summary.totalRisk}%</SummaryValue>
+              <SummaryValue>{analysis.summary.totalRisk}%</SummaryValue>
               <SummaryLabel>Riesgo Total</SummaryLabel>
             </SummaryCard>
             <SummaryCard>
               <SummaryIcon><FaShieldAlt /></SummaryIcon>
-              <SummaryValue>{data.summary.potentialReturn}%</SummaryValue>
+              <SummaryValue>{analysis.summary.potentialReturn}%</SummaryValue>
               <SummaryLabel>Retorno Potencial</SummaryLabel>
             </SummaryCard>
             <SummaryCard>
               <SummaryIcon><FaLightbulb /></SummaryIcon>
-              <SummaryValue>{data.summary.confidence}%</SummaryValue>
+              <SummaryValue>{analysis.summary.confidence}%</SummaryValue>
               <SummaryLabel>Confianza</SummaryLabel>
             </SummaryCard>
           </SummarySection>
@@ -118,7 +120,7 @@ const InvestmentRisk = () => {
           <RiskFactorsSection>
             <SectionTitle>Factores de Riesgo</SectionTitle>
             <RiskGrid>
-              {data.riskFactors.map(factor => (
+              {analysis.riskFactors.map(factor => (
                 <RiskCard key={factor.id} level={factor.level}>
                   <RiskName>{factor.name}</RiskName>
                   <RiskScore>{factor.score}%</RiskScore>
@@ -146,25 +148,25 @@ const InvestmentRisk = () => {
             <MarketGrid>
               <MarketCard>
                 <MarketTitle>Tamaño del Mercado</MarketTitle>
-                <MarketValue>€{data.marketAnalysis.size.toLocaleString()}</MarketValue>
+                <MarketValue>€{analysis.marketAnalysis.size.toLocaleString()}</MarketValue>
               </MarketCard>
               <MarketCard>
                 <MarketTitle>Crecimiento</MarketTitle>
-                <MarketValue>{data.marketAnalysis.growth}%</MarketValue>
+                <MarketValue>{analysis.marketAnalysis.growth}%</MarketValue>
               </MarketCard>
               <MarketCard>
                 <MarketTitle>Competencia</MarketTitle>
-                <MarketValue>{data.marketAnalysis.competition}%</MarketValue>
+                <MarketValue>{analysis.marketAnalysis.competition}%</MarketValue>
               </MarketCard>
               <MarketCard>
                 <MarketTitle>Barreras de Entrada</MarketTitle>
-                <MarketValue>{data.marketAnalysis.barriers}%</MarketValue>
+                <MarketValue>{analysis.marketAnalysis.barriers}%</MarketValue>
               </MarketCard>
             </MarketGrid>
             <ChartContainer>
               <ChartTitle>Tendencia de Mercado</ChartTitle>
               <LineChart 
-                data={data.marketAnalysis.trends.map(t => ({
+                data={analysis.marketAnalysis.trends.map(t => ({
                   date: `Mes ${t.month}`,
                   value: t.value
                 }))}
@@ -178,7 +180,7 @@ const InvestmentRisk = () => {
         <SideSection>
           <SectionTitle>Recomendaciones</SectionTitle>
           <RecommendationsList>
-            {data.recommendations.map(rec => (
+            {analysis.recommendations.map(rec => (
               <RecommendationCard key={rec.id} type={rec.type}>
                 <RecommendationIcon>
                   <rec.icon />
@@ -209,7 +211,7 @@ const InvestmentRisk = () => {
           <RiskMitigationSection>
             <SectionTitle>Estrategias de Mitigación</SectionTitle>
             <MitigationList>
-              {data.riskAssessment.mitigation.strategies.map((strategy, index) => (
+              {analysis.riskAssessment.mitigation.strategies.map((strategy, index) => (
                 <MitigationItem key={index}>
                   <MitigationNumber>{index + 1}</MitigationNumber>
                   <MitigationText>{strategy}</MitigationText>
@@ -217,7 +219,7 @@ const InvestmentRisk = () => {
               ))}
             </MitigationList>
             <MitigationEffectiveness>
-              Efectividad: {data.riskAssessment.mitigation.effectiveness}%
+              Efectividad: {analysis.riskAssessment.mitigation.effectiveness}%
             </MitigationEffectiveness>
           </RiskMitigationSection>
 

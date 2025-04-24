@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaBullseye, FaEye, FaHeart } from 'react-icons/fa';
-import { theme } from '../theme';
+import { theme } from '../../theme';
 
 const EssenceSection = () => {
   return (
